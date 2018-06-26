@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	
+	<title>Reservation System</title>
+	
+	<link rel="stylesheet" type="text/css" href="assets/css/layout.css">
+
+    <script type="text/javascript" src="plugin/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="plugin/jquery/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="assets/js/ui.js"></script>
+    
+    <!-- plugin -->
+	<link rel="stylesheet" type="text/css" href="plugin/brick_UI/brick_UI.css">
+    <link rel="stylesheet" type="text/css" href="plugin/material-iconic-font/css/material-design-iconic-font.min.css">
+
+
+</head>
+
+<body>
+
+<div id="wraps">
+	<div id="container">
+		<div class="header fb_ewy">
+			<div class="title">
+				<h2>KJH LABS</h2>
+			</div>
+			<div class="tools">
+				<!-- time -->
+				<div class="time">
+					<div id="clock"></div>
+					<div id="date"></div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- reserveIng -->
+		<div id="reserveIng" class="fb_xy">
+			<div class="info">
+				<strong>여기다가 제목</strong>
+				<span>09:10 ~ 10:10 시간</span>
+				<p>이름</p>
+			</div>
+		
+		</div>
+		
+		<!-- reserveFull -->
+		<div id="reserveFull">
+			<div class="tableWrap tableHeader">
+				<table>
+					<thead>
+						<tr>
+							<th scope="col">&nbsp;</th>
+							<th scope="col">월</th>
+							<th scope="col">화</th>
+							<th scope="col">수</th>
+							<th scope="col">목</th>
+							<th scope="col">금</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+			<div class="tableWrap tableBody">
+				<table>
+					<tbody>
+						<tr>
+							<td rowspan="6">09</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td rowspan="6" class="reserve" onclick="reserveData()">
+								<div class="info">
+									<strong>회의이름</strong>
+									<span>09:10 ~ 10:10</span>
+								</div>
+							</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td rowspan="6" class="reserve">&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr class="hr">
+							<td rowspan="6">10</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td rowspan="7" class="reserve">&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr class="hr">
+							<td rowspan="6">11</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr class="hr">
+							<td rowspan="6">12</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr class="hr">
+							<td rowspan="6">13</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr class="hr">
+							<td rowspan="6">14</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr class="hr">
+							<td rowspan="6">15</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr class="hr">
+							<td rowspan="6">16</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr class="hr">
+							<td rowspan="6">17</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr class="hr">
+							<td rowspan="6">18</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+			
+	</div>
+	
+	
+	<!-- side -->
+	<div id="side">
+	
+		<!-- navi -->
+		<div id="navi" class="fb_xy">
+			<div class="buttonWraps">
+				<button type="button" class="i zmdi-home active" id="btnHome"></button>
+				<button type="button" class="i zmdi-assignment" id="btnReserve"></button>
+				<!--<button type="button" class="i zmdi-border-color"></button> -->
+			</div>
+		</div>
+		
+		<!-- reserveWrite -->
+		<div id="reserveWrite">
+			<div class="formWrap">
+				<div class="form">
+					<h2>예약하기</h2>
+					
+					<div id="reserveChoice" class="reserveChoice i zmdi-calendar-alt"> 날짜를 선택해 주세요.<!--(목요일) 09:10 ~ 10: 10 --></div>
+					
+					<dl>
+						<dt>사번</dt>
+						<dd>
+							<div class="inputWrap">
+								<input type="text" id="inputDefault4" placeholder="사번">
+								<label for="inputDefault4">사번</label>
+								<div class="addon">
+									<button type="button" class="hding button dark"><span>조회</span></button>
+								</div>
+							</div>
+						</dd>
+					</dl>
+					
+					<dl>
+						<dt>회의제목</dt>
+						<dd>
+							<label for="input_demo_01">회의제목</label>
+							<input type="text" id="input_demo_01" placeholder="회의제목">
+						</dd>
+					</dl>
+					
+					<dl>
+						<dt>담당자</dt>
+						<dd>
+							<label for="input_demo_02">담당자</label>
+							<input type="text" id="input_demo_02" placeholder="담당자">
+						</dd>
+					</dl>
+					
+					<dl>
+						<dt>연락처</dt>
+						<dd>
+							<label for="input_demo_03">연락처</label>
+							<input type="text" id="input_demo_03" placeholder="연락처">
+						</dd>
+					</dl>
+				</div>
+				
+				<div class="buttonWrap">
+					<button id="btnReserveBack" type="button" class="button dark">취소</button>
+					<button id="" type="button" class="button prime">예약</button>
+				</div>
+
+			</div>
+			
+			<!-- reserveDate -->
+			<div id="reserveDate" class="formWrap date">
+				<div class="form">
+					<h2>날짜 선택</h2>
+					<div class="week">
+						<button type="button" disabled>월</button>
+						<button type="button" disabled>화</button>
+						<button type="button" disabled>수</button>
+						<button type="button" class="active">목</button>
+						<button type="button">금</button>
+					</div>
+					<div class="time">
+						<dl>
+							<dt>시작시간</dt>
+							<dd>
+								<span class="clock">
+									<label for="number">clock</label>
+									<select name="number" class="selectmenu">
+										<option>09시</option>
+										<option>10시</option>
+										<option>11시</option>
+										<option>12시</option>
+										<option>13시</option>
+										<option>14시</option>
+										<option>15시</option>
+										<option>16시</option>
+										<option>17시</option>
+										<option>18시</option>
+									</select>
+								</span>
+								<span class="min">
+									<label for="number">min</label>
+									<select name="number" class="selectmenu">
+										<option>10분</option>
+										<option>20분</option>
+										<option>30분</option>
+										<option>40분</option>
+										<option>50분</option>
+									</select>
+								</span>
+							</dd>
+						</dl>
+					</div>
+					<div class="time">
+						<dl>
+							<dt>종료시간</dt>
+							<dd>
+								<span class="clock">
+									<label for="number">clock</label>
+									<select name="number" class="selectmenu">
+										<option>09시</option>
+										<option>10시</option>
+										<option>11시</option>
+										<option>12시</option>
+										<option>13시</option>
+										<option>14시</option>
+										<option>15시</option>
+										<option>16시</option>
+										<option>17시</option>
+										<option>18시</option>
+									</select>
+								</span>
+								<span class="min">
+									<label for="number">min</label>
+									<select name="number" class="selectmenu">
+										<option>10분</option>
+										<option>20분</option>
+										<option>30분</option>
+										<option>40분</option>
+										<option>50분</option>
+									</select>
+								</span>
+							</dd>
+						</dl>
+					</div>
+				
+				</div>
+				
+				<div class="buttonWrap">
+					<button id="reserveChoiceOk" type="button" class="button prime fw">확인</button>
+				</div>
+				
+			</div>
+			
+			
+			
+			<!-- reserveDate -->
+			<div id="reserveSelect" class="formWrap date">
+				<div class="form">
+					<h2>선택한 예약</h2>
+
+					<div class="reserveInfo">제목을 여기에 넣으면 됩니다.</div>
+					
+					<dl>
+						<dt>사번</dt>
+						<dd>
+							<label for="input_demo_09">사번</label>
+							<input type="text" id="input_demo_09" placeholder="사번">
+						</dd>
+					</dl>
+					
+
+				
+				</div>
+				
+				<div class="buttonWrap">
+					<button id="reserveDataClose" type="button" class="button dark">취소</button>
+					<button id="" type="button" class="button warning">삭제</button>
+				</div>
+				
+			</div>
+			
+			
+			
+		</div>
+	</div>
+</div>
+
+
+</body>
+</html>
