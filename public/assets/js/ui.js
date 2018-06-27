@@ -1,15 +1,74 @@
 
+var _monthNames = ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"];
+var _dayNames = ["일", "월", "화", "수", "목", "금", "토"]
+var _monthdays = new Array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
+
+var _weekNext = 1;
+
 $(document).ready(function() {
+	init();
 	reservationUi();
 	brickUi();
 	clock();
-	
+	test();
+
+	//test를 위한 
+	//setInterval : clock 1초마다 갱신.
 	setInterval('clock()', 1000);
-	
-	
 });
 
 
+ 
+
+function init() {
+	
+	// console.log($('#reserveTableHeader'));
+
+
+	// getMonth();
+	fnTableInit();
+}
+
+function test() {
+	$( "#btnReserve" ).trigger( "click" );
+	$('#input_demo_01').val("Reserver System 구축");
+	$('#input_demo_02').val("김준엽");
+	$('#input_demo_03').val("010-2312-1111");
+	$('#input_demo_04').val("17:00");
+	$('#input_demo_05').val("18:00");
+}
+
+function fnTableInit() {
+	var datePrint = new Date();
+	var dayOfWeek = _dayNames[datePrint.getDay()];
+	var tableStr = '';
+	tableStr += '<thead><tr>'
+	$('#month').html(_monthNames[datePrint.getMonth()]);
+
+	// test code 
+	var daysArray = new Date().getWeek(_weekNext); 
+	// alert(dates[0].toLocaleDateString() + ' to '+ dates[1].toLocaleDateString());
+	console.log(daysArray);
+
+	console.log(daysArray[0].getMonth()+1);
+
+	// var weekStartDate = dates[0].getDate();
+	// var weekEndDate = dates[1].getDate();
+
+	tableStr += '<th scope="col">&nbsp;</th>';
+
+	for(var i = 0 ; i < 5 ; i++) {
+		tableStr += '<th scope="col">'+_dayNames[i+1]+' ('+(daysArray[i].getMonth()+1)+'/'+(daysArray[i].getDate())+')</th>';
+	}
+
+	// tableStr += '<th scope="col">월 ('+weekGetMonth+'/'+(weekStartDate+index++)+')</th>';
+	// tableStr += '<th scope="col">화 ('+weekGetMonth+'/'+(weekStartDate+index++)+')</th>';
+	// tableStr += '<th scope="col">수 ('+weekGetMonth+'/'+(weekStartDate+index++)+')</th>';
+	// tableStr += '<th scope="col">목 ('+weekGetMonth+'/'+(weekStartDate+index++)+')</th>';
+	// tableStr += '<th scope="col">금 ('+weekGetMonth+'/'+(weekStartDate+index++)+')</th>';
+	tableStr += '</tr></thead>'
+	$('#reserveTableHeader').html(tableStr);
+}
 
 	
 /*****************************************
@@ -17,14 +76,13 @@ $(document).ready(function() {
 *****************************************/	
 function reservationUi () {
 	
-	$("#btnHome, #btnReserveBack").click(function (){
+	$("#homeTitle, #btnHome, #btnReserveBack").click(function (){
 		$("#btnHome").addClass("active").siblings().removeClass("active");
 		$("#wraps").removeClass("reserve");
 		$("#reserveFull").hide();
 		$("#reserveIng").show();
 		$("#reserveWrite").hide();
 		$("#navi").show();
-		
 	})
 	
 	$("#btnReserve").click(function (){
@@ -50,12 +108,29 @@ function reservationUi () {
 	$("#reserveDataClose").click(function (){
 		$("#reserveSelect").removeClass("active");
 	})
-	
-	
 
+	$("#btnFormSubmmit").unbind('click').bind('click',function(){
+		fnAjaxWriteReserve();
+	})
+
+	$("#next").unbind("click").bind("click",function(){
+		console.log('##_weekNext : ' + _weekNext);
+		_weekNext += 7;
+		fnTableInit();
+	})
+	
+	$("#prev").unbind("click").bind("click",function(){
+		fnTableInit(7);
+	})
 };
 
+function fnSetNextWeek() {
+	var nextmonth;
+}
 
+function fnSetPrevWeek() {
+
+}
 
 // reserveData
 function reserveData() {
@@ -66,43 +141,8 @@ function reserveData() {
  * BRICK UI
 *****************************************/	
 function brickUi () {
-	
-// input type=file design
-	$( '.inputfile' ).each( function()
-	{
-		var $input	 = $( this ),
-			$label	 = $input.next( 'label' ),
-			labelVal = $label.html();
-
-		$input.on( 'change', function( e )
-		{
-			var fileName = '';
-
-			if( this.files && this.files.length > 1 )
-				fileName = ( this.getAttribute( 'data-multiple-caption' ) || '' ).replace( '{count}', this.files.length );
-			else if( e.target.value )
-				fileName = e.target.value.split( '\\' ).pop();
-
-			if( fileName )
-				$label.find( 'span' ).html( fileName );
-			else
-				$label.html( labelVal );
-		});
-
-		// Firefox bug fix
-		$input
-		.on( 'focus', function(){ $input.addClass( 'has-focus' ); })
-		.on( 'blur', function(){ $input.removeClass( 'has-focus' ); });
-	});
-	
 // selectmenu
 	$(".selectmenu").selectmenu();
-	
-// tooltip
-	$( ".tooltip" ).tooltip({track:true});
-	
-
-
 };
 
 /***********************************************************
@@ -113,8 +153,6 @@ function clock() {
 	// Create two variable with the names of the months and days in an array
 	//var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
 	//var dayNames= ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
-	var monthNames = ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"];
-	var dayNames = ["일", "월", "화", "수", "목", "금", "토"]
 	
 	// Create a newDate() object
 	var newDate = new Date();
@@ -122,7 +160,7 @@ function clock() {
 	newDate.setDate(newDate.getDate());
 	// Output the day, date, month and year
 	//$('#Date').html(dayNames[newDate.getDay()] + " " + newDate.getDate() + ' ' + monthNames[newDate.getMonth()] + ' ' + newDate.getFullYear());
-	$('#date').html(newDate.getFullYear() + '년 ' + monthNames[newDate.getMonth()] + ' ' + newDate.getDate() + '일 ' + ' (' + dayNames[newDate.getDay()] + ') 요일');
+	$('#date').html(newDate.getFullYear() + '년 ' + _monthNames[newDate.getMonth()] + ' ' + newDate.getDate() + '일 ' + ' (' + _dayNames[newDate.getDay()] + ') 요일');
 
     var today = new Date();
     var hours = today.getHours();
@@ -155,13 +193,47 @@ function clock() {
     } else {
         seconds = seconds;
     }
-    document.getElementById("clock").innerHTML = (hours + ":" + minutes + ":" + seconds + '<span>'+ meridiem +'</span>');			
+	document.getElementById("clock").innerHTML = (hours + ":" + minutes + ":" + seconds + '<span>'+ meridiem +'</span>');			
+}
+ 
+function fnAjaxWriteReserve() {
 
+	var reserveData = {
+		title: $('#input_demo_01').val(),
+		name: $('#input_demo_02').val(),
+		phone: $('#input_demo_03').val(),
+		startTime: $('#input_demo_04').val(), 
+		endTime: $('#input_demo_05').val(),
+	}
+
+	$.ajax({
+		type: "POST",
+		url: "/reserveWrite",
+		data: reserveData,
+		success: function(){
+			console.log('success!');
+		} 
+	})
 }
 
+Date.prototype.getWeek = function(start) 
+{ 
+    //Calcing the starting point 
+    var start = start || 0; 
+    var today = new Date(this.setHours(0, 0, 0, 0)); 
+	var day = today.getDay() - start; 
+	//getDay = return this day of the week
+    var date = today.getDate() - day; 
  
- 
- 
- 
- 
- 
+	// Grabbing Start/End Dates
+	// Mon 여기서 +7 씩하면 된다 다음주나오들.
+
+	var daysArray = new Array();
+	for(var i = 1 ; i < 6 ; i ++) {
+		daysArray.push(new Date(today.setDate(date+i)));
+	}
+	var StartDate = new Date(today.setDate(date + 1)); 
+	// Fri
+    var EndDate = new Date(today.setDate(date + 5)); 
+    return daysArray; 
+} 

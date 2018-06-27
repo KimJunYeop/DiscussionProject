@@ -125,7 +125,9 @@ UI - LAYOUT
 #side #reserveWrite .formWrap.date {position:fixed; width:300px; right:-320px; top:0px; bottom:0px; z-index:2; background:#FFF; box-shadow:0 3px 3px rgba(53, 57, 74, 0.7);}
 #side #reserveWrite .formWrap.date.active {right:-6px;}
 
-
+#prev, #next {
+	color: grey;
+}
 
 
 

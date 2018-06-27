@@ -8,25 +8,30 @@
 	
 	<link rel="stylesheet" type="text/css" href="assets/css/layout.css">
 
-    <script type="text/javascript" src="plugin/jquery/jquery.min.js"></script>
-    <script type="text/javascript" src="plugin/jquery/jquery-ui.min.js"></script>
-	<script type="text/javascript" src="assets/js/ui.js"></script>
+    <!-- <script type="text/javascript" src="plugin/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="plugin/jquery/jquery-ui.min.js"></script> -->
+	<script type="text/javascript" src="plugin/jquery/jquery.js"></script>
+	<script type="text/javascript" src="plugin\jquery-ui\jquery-ui.js"></script>
     
     <!-- plugin -->
 	<link rel="stylesheet" type="text/css" href="plugin/brick_UI/brick_UI.css">
-    <link rel="stylesheet" type="text/css" href="plugin/material-iconic-font/css/material-design-iconic-font.min.css">
-
+	<link rel="stylesheet" type="text/css" href="plugin/material-iconic-font/css/material-design-iconic-font.min.css">
+	
+	<script type="text/javascript" src="assets/js/ui.js"></script>
 
 </head>
-
 <body>
-
 <div id="wraps">
 	<div id="container">
 		<div class="header fb_ewy">
-			<div class="title">
-				<h2>KJH LABS</h2>
+			<div id="homeTitle" class="title">
+				<button type="button" id="homeTitle"><h2>KJY LABS</h2></button>
 			</div>
+
+			<button type="button" id="prev"> &#10094; </button>
+			<div class="fb_y" id="month"></div>
+			<button type="button" id="next"> &#10095; </button>
+			
 			<div class="tools">
 				<!-- time -->
 				<div class="time">
@@ -35,7 +40,7 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<!-- reserveIng -->
 		<div id="reserveIng" class="fb_xy">
 			<div class="info">
@@ -43,14 +48,12 @@
 				<span>09:10 ~ 10:10 시간</span>
 				<p>이름</p>
 			</div>
-		
 		</div>
-		
 		<!-- reserveFull -->
 		<div id="reserveFull">
 			<div class="tableWrap tableHeader">
-				<table>
-					<thead>
+				 <table id="reserveTableHeader">
+					<!-- <thead>
 						<tr>
 							<th scope="col">&nbsp;</th>
 							<th scope="col">월</th>
@@ -59,11 +62,11 @@
 							<th scope="col">목</th>
 							<th scope="col">금</th>
 						</tr>
-					</thead>
+					</thead> -->
 				</table>
 			</div>
 			<div class="tableWrap tableBody">
-				<table>
+				<table id="reserveTableBody">
 					<tbody>
 						<tr>
 							<td rowspan="6">09</td>
@@ -73,6 +76,7 @@
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
 						</tr>
+						<!-- row span값으로 합니다.. -->
 						<tr>
 							<td>&nbsp;</td>
 							<td rowspan="6" class="reserve" onclick="reserveData()">
@@ -513,19 +517,6 @@
 					<div id="reserveChoice" class="reserveChoice i zmdi-calendar-alt"> 날짜를 선택해 주세요.<!--(목요일) 09:10 ~ 10: 10 --></div>
 					
 					<dl>
-						<dt>사번</dt>
-						<dd>
-							<div class="inputWrap">
-								<input type="text" id="inputDefault4" placeholder="사번">
-								<label for="inputDefault4">사번</label>
-								<div class="addon">
-									<button type="button" class="hding button dark"><span>조회</span></button>
-								</div>
-							</div>
-						</dd>
-					</dl>
-					
-					<dl>
 						<dt>회의제목</dt>
 						<dd>
 							<label for="input_demo_01">회의제목</label>
@@ -548,11 +539,24 @@
 							<input type="text" id="input_demo_03" placeholder="연락처">
 						</dd>
 					</dl>
+
+					<dl>
+						<dt>시간</dt>
+						<dd>
+							<label for="input_demo_04">시작시간</label>
+							<input type="text" id="input_demo_04" placeholder="시작시간">
+						</dd>
+						<dd>
+							<label for="input_demo_05">종료시간</label>
+							<input type="text" id="input_demo_05" placeholder="종료시간">
+						</dd>
+							
+					</dl>
 				</div>
 				
 				<div class="buttonWrap">
 					<button id="btnReserveBack" type="button" class="button dark">취소</button>
-					<button id="" type="button" class="button prime">예약</button>
+					<button id="btnFormSubmmit" type="button" class="button prime">예약</button>
 				</div>
 
 			</div>
