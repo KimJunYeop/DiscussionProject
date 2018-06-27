@@ -3,7 +3,7 @@ var _monthNames = ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월
 var _dayNames = ["일", "월", "화", "수", "목", "금", "토"]
 var _monthdays = new Array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
 
-var _weekNext = 1;
+var _weekNext = 0;
 
 $(document).ready(function() {
 	init();
@@ -48,18 +48,15 @@ function fnTableInit() {
 	// test code 
 	var daysArray = new Date().getWeek(_weekNext); 
 	// alert(dates[0].toLocaleDateString() + ' to '+ dates[1].toLocaleDateString());
-	console.log(daysArray);
-
-	console.log(daysArray[0].getMonth()+1);
 
 	// var weekStartDate = dates[0].getDate();
 	// var weekEndDate = dates[1].getDate();
 
 	tableStr += '<th scope="col">&nbsp;</th>';
 
-	for(var i = 0 ; i < 5 ; i++) {
-		tableStr += '<th scope="col">'+_dayNames[i+1]+' ('+(daysArray[i].getMonth()+1)+'/'+(daysArray[i].getDate())+')</th>';
-	}
+	// for(var i = 0 ; i < 5 ; i++) {
+	// 	tableStr += '<th scope="col">'+_dayNames[i+1]+' ('+(daysArray[i].getMonth()+1)+'/'+(daysArray[i].getDate())+')</th>';
+	// }
 
 	// tableStr += '<th scope="col">월 ('+weekGetMonth+'/'+(weekStartDate+index++)+')</th>';
 	// tableStr += '<th scope="col">화 ('+weekGetMonth+'/'+(weekStartDate+index++)+')</th>';
@@ -219,7 +216,8 @@ function fnAjaxWriteReserve() {
 Date.prototype.getWeek = function(start) 
 { 
     //Calcing the starting point 
-    var start = start || 0; 
+	var start = start || 0; 
+	console.log('start : ' + start);
     var today = new Date(this.setHours(0, 0, 0, 0)); 
 	var day = today.getDay() - start; 
 	//getDay = return this day of the week
@@ -229,11 +227,19 @@ Date.prototype.getWeek = function(start)
 	// Mon 여기서 +7 씩하면 된다 다음주나오들.
 
 	var daysArray = new Array();
-	for(var i = 1 ; i < 6 ; i ++) {
-		daysArray.push(new Date(today.setDate(date+i)));
-	}
+	// for(var i = 0 ; i < 5 ; i ++) {
+	// 	var dayValue = new Date(today.setDate(date+1));
+	// 	daysArray.push(dayValue);
+	// }
+
+	// console.log('###~~~~~~~~~~~~~~~~~~~~~~###');
+	// console.log(daysArray);
+	// console.log('###~~~~~~~~~~~~~~~~~~~~~~###');
+
 	var StartDate = new Date(today.setDate(date + 1)); 
-	// Fri
-    var EndDate = new Date(today.setDate(date + 5)); 
-    return daysArray; 
+	var EndDate = new Date(today.setDate(date + 5)); 
+	console.log(StartDate);
+	console.log(EndDate);
+
+    // return daysArray; 
 } 
