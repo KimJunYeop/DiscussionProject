@@ -21,11 +21,6 @@ $(document).ready(function() {
  
 
 function init() {
-	
-	// console.log($('#reserveTableHeader'));
-
-
-	// getMonth();
 	fnTableInit();
 }
 
@@ -40,31 +35,44 @@ function test() {
 
 function fnTableInit() {
 	var datePrint = new Date();
-	var dayOfWeek = _dayNames[datePrint.getDay()];
 	var tableStr = '';
+	var time = 8;
+	var minute = 0;
 	tableStr += '<thead><tr>'
-	$('#month').html(_monthNames[datePrint.getMonth()]);
 
-	// test code 
-	var daysArray = new Date().getWeek(_weekNext); 
-	// alert(dates[0].toLocaleDateString() + ' to '+ dates[1].toLocaleDateString());
 
-	// var weekStartDate = dates[0].getDate();
-	// var weekEndDate = dates[1].getDate();
-
+	// get Date.
+	var daysArray = new Date().getWeek(); ;
 	tableStr += '<th scope="col">&nbsp;</th>';
-
-	// for(var i = 0 ; i < 5 ; i++) {
-	// 	tableStr += '<th scope="col">'+_dayNames[i+1]+' ('+(daysArray[i].getMonth()+1)+'/'+(daysArray[i].getDate())+')</th>';
-	// }
-
-	// tableStr += '<th scope="col">월 ('+weekGetMonth+'/'+(weekStartDate+index++)+')</th>';
-	// tableStr += '<th scope="col">화 ('+weekGetMonth+'/'+(weekStartDate+index++)+')</th>';
-	// tableStr += '<th scope="col">수 ('+weekGetMonth+'/'+(weekStartDate+index++)+')</th>';
-	// tableStr += '<th scope="col">목 ('+weekGetMonth+'/'+(weekStartDate+index++)+')</th>';
-	// tableStr += '<th scope="col">금 ('+weekGetMonth+'/'+(weekStartDate+index++)+')</th>';
+	for(var i = 0 ; i < 5 ; i++) {
+		tableStr += '<th scope="col">'+_dayNames[i+1]+' ('+(daysArray[i].getMonth()+1)+'/'+(daysArray[i].getDate())+')</th>';
+	}
 	tableStr += '</tr></thead>'
+
+	$('#month').html(_monthNames[daysArray[0].getMonth()]);
 	$('#reserveTableHeader').html(tableStr);
+
+	var tableBodyStr = '';
+	for(var i = 0 ; i < 60 ; i ++) {
+		if(i%6 == 0) {
+			tableBodyStr += "<tr class='hr'>";
+		} else {
+			tableBodyStr += "<tr>";
+		}
+		for(var j = 0 ; j < 5 ; j++) {
+			if(i%6==0 && j == 0){
+				tableBodyStr += "<td rowspan='6'>"+(time++)+"</td>"
+			}
+			tableBodyStr += "<td data-time="+(time-1)+':'+minute+">&nbsp;</td>"
+		}
+		minute += 10;
+		if(minute == 60){
+			minute = 0;
+		}
+		tableBodyStr += "</tr>"
+	}
+	// $('#reserveTableBody').html();
+	$('#reserveTableBody tbody').html(tableBodyStr);
 }
 
 	
@@ -111,23 +119,19 @@ function reservationUi () {
 	})
 
 	$("#next").unbind("click").bind("click",function(){
-		console.log('##_weekNext : ' + _weekNext);
 		_weekNext += 7;
 		fnTableInit();
 	})
 	
 	$("#prev").unbind("click").bind("click",function(){
-		fnTableInit(7);
+		_weekNext -= 7;
+		fnTableInit();
+	})
+
+	$("#reserveTableBody td").unbind("click").bind("click",function(){
+		console.log($(this));
 	})
 };
-
-function fnSetNextWeek() {
-	var nextmonth;
-}
-
-function fnSetPrevWeek() {
-
-}
 
 // reserveData
 function reserveData() {
@@ -213,33 +217,30 @@ function fnAjaxWriteReserve() {
 	})
 }
 
+function fnGetWeek(){
+	
+}
+
 Date.prototype.getWeek = function(start) 
 { 
     //Calcing the starting point 
 	var start = start || 0; 
-	console.log('start : ' + start);
-    var today = new Date(this.setHours(0, 0, 0, 0)); 
+
+	var today = new Date(this.setHours(0, 0, 0, 0)); 
+	var dayPlus = today.getDate();
+	today.setDate(dayPlus + _weekNext);
+
+	var myDate = new Date("1/1/1990");
+	var dayOfMonth = myDate.getDate();
+	myDate.setDate(dayOfMonth - 1);
+
 	var day = today.getDay() - start; 
-	//getDay = return this day of the week
-    var date = today.getDate() - day; 
- 
-	// Grabbing Start/End Dates
-	// Mon 여기서 +7 씩하면 된다 다음주나오들.
-
+	var date = today.getDate() - day; 
 	var daysArray = new Array();
-	// for(var i = 0 ; i < 5 ; i ++) {
-	// 	var dayValue = new Date(today.setDate(date+1));
-	// 	daysArray.push(dayValue);
-	// }
 
-	// console.log('###~~~~~~~~~~~~~~~~~~~~~~###');
-	// console.log(daysArray);
-	// console.log('###~~~~~~~~~~~~~~~~~~~~~~###');
+	for(var i=1 ; i<6 ; i++ ) {
+		daysArray.push(new Date(today.setDate(date + i)));
+	}
 
-	var StartDate = new Date(today.setDate(date + 1)); 
-	var EndDate = new Date(today.setDate(date + 5)); 
-	console.log(StartDate);
-	console.log(EndDate);
-
-    // return daysArray; 
+    return daysArray; 
 } 
