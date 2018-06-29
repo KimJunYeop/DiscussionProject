@@ -1,63 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-	
-	<title>Reservation System</title>
-	
-	<link rel="stylesheet" type="text/css" href="assets/css/layout.css">
 
-    <!-- <script type="text/javascript" src="plugin/jquery/jquery.min.js"></script>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	<title>Reservation System</title>
+
+	<link rel="stylesheet" type="text/css" href="assets/css/layout.css">
+	<!-- <script type="text/javascript" src="plugin/jquery/jquery.min.js"></script>
 	<script type="text/javascript" src="plugin/jquery/jquery-ui.min.js"></script> -->
+	<link rel="stylesheet" type="text/css" href="plugin/w3css/w3.css">
 	<script type="text/javascript" src="plugin/jquery/jquery.js"></script>
 	<script type="text/javascript" src="plugin\jquery-ui\jquery-ui.js"></script>
-    
-    <!-- plugin -->
+
+	<!-- plugin -->
 	<link rel="stylesheet" type="text/css" href="plugin/brick_UI/brick_UI.css">
 	<link rel="stylesheet" type="text/css" href="plugin/material-iconic-font/css/material-design-iconic-font.min.css">
-	
+
 	<script type="text/javascript" src="assets/js/ui.js"></script>
 
 </head>
-<body>
-<div id="wraps">
-	<div id="container">
-		<div class="header fb_ewy">
-			<div id="homeTitle" class="title">
-				<button type="button" id="homeTitle"><h2>KJY LABS</h2></button>
-			</div>
 
-			<button type="button" id="prev"> &#10094; </button>
-			<div class="fb_y" id="month"></div>
-			<button type="button" id="next"> &#10095; </button>
-			
-			<div class="tools">
-				<!-- time -->
-				<div class="time">
-					<div id="clock"></div>
-					<div id="date"></div>
+<body>
+	<div id="wraps">
+		<div id="container">
+			<div class="header fb_ewy">
+				<div id="homeTitle" class="title">
+					<button type="button" id="homeTitle">
+						<h2>KJY LABS</h2>
+					</button>
+				</div>
+
+				<button type="button" id="prev"> &#10094; </button>
+				<div class="fb_y" id="month"></div>
+				<button type="button" id="next"> &#10095; </button>
+
+				<div class="tools">
+					<!-- time -->
+					<div class="time">
+						<div id="clock"></div>
+						<div id="date"></div>
+					</div>
 				</div>
 			</div>
-		</div>
 
-		<!-- reserveIng -->
-		<div id="reserveIng" class="fb_xy">
-			<div class="info">
-				<strong>여기다가 제목</strong>
-				<span>09:10 ~ 10:10 시간</span>
-				<p>이름</p>
+			<!-- reserveIng -->
+			<div id="reserveIng" class="fb_xy">
+				<div class="info">
+					<strong>여기다가 제목</strong>
+					<span>09:10 ~ 10:10 시간</span>
+					<p>이름</p>
+				</div>
 			</div>
-		</div>
-		<!-- reserveFull -->
-		<div id="reserveFull">
-			<div class="tableWrap tableHeader">
-				 <table id="reserveTableHeader">
-				</table>
-			</div>
-			<div class="tableWrap tableBody">
-				<table id="reserveTableBody">
-					<tbody>
+			<!-- reserveFull -->
+			<div id="reserveFull">
+				<div class="tableWrap tableHeader">
+					<table id="reserveTableHeader">
+					</table>
+				</div>
+				<div class="tableWrap tableBody">
+					<table id="reserveTableBody">
+						<tbody>
 							<!-- <tr>
 								<td>&nbsp;</td>
 								<td rowspan="7" class="reserve" onclick="reserveData()">
@@ -70,31 +74,91 @@
 								<td>&nbsp;</td>
 								<td>&nbsp;</td>
 							</tr> -->
-					</tbody>
-				</table>
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
-			
+
+
+		<!-- side -->
+		<div id="side">
+
+			<!-- navi -->
+			<div id="navi" class="fb_xy">
+				<div class="buttonWraps">
+					<button type="button" class="i zmdi-home active" id="btnHome"></button>
+					<button type="button" class="i zmdi-assignment" id="btnReserve"></button>
+					<!--<button type="button" class="i zmdi-border-color"></button> -->
+				</div>
+			</div>
+
+			<!-- reserveWrite -->
+			<div id="reserveUpdate">
+				<div class="formWrap">
+					<div id="updateForm" class="form">
+						<h2>예약내용</h2>
+
+						<div class="reserveChoice i zmdi-calendar-alt" id="reserveChoice"> 날짜를 선택해 주세요.
+							<!--(목요일) 09:10 ~ 10: 10 -->
+						</div>
+
+						<dl>
+							<dt>사번</dt>
+							<dd>
+								<div class="inputWrap">
+									<input id="inputDefault4" type="text" placeholder="사번">
+									<label for="inputDefault4">사번</label>
+									<div class="addon">
+										<button class="hding button dark" type="button">
+											<span>조회</span>
+										</button>
+									</div>
+								</div>
+							</dd>
+						</dl>
+
+						<dl>
+							<dt>회의제목</dt>
+							<dd>
+								<label for="input_demo_01">회의제목</label>
+								<input id="input_demo_01" type="text" placeholder="회의제목">
+							</dd>
+						</dl>
+
+						<dl>
+							<dt>담당자</dt>
+							<dd>
+								<label for="input_demo_02">담당자</label>
+								<input id="input_demo_02" type="text" placeholder="담당자">
+							</dd>
+						</dl>
+
+						<dl>
+							<dt>연락처</dt>
+							<dd>
+								<label for="input_demo_03">연락처</label>
+								<input id="input_demo_03" type="text" placeholder="연락처">
+							</dd>
+						</dl>
+					</div>
+					<div class="buttonWrap">
+						<button id="btnUpdateCancel" type="button" class="button dark">취소</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
-	
-	
-	<!-- side -->
-	<div id="side">
-	
-		<!-- navi -->
-		<div id="navi" class="fb_xy">
-			<div class="buttonWraps">
-				<button type="button" class="i zmdi-home active" id="btnHome"></button>
-				<button type="button" class="i zmdi-assignment" id="btnReserve"></button>
-				<!--<button type="button" class="i zmdi-border-color"></button> -->
-			</div>
-		</div>
-		
-		<!-- reserveWrite -->
-		<div id="reserveWrite">
-			<div class="formWrap">
-				<div class="form">
-					<h2>예약하기</h2>
+	<div id="id01" class="w3-modal">
+		<div class="w3-modal-content w3-animate-zoom">
+			<header class="w3-container w3-grey">
+				<span onclick="document.getElementById('id01').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+				<div class="w3-margin">
+					<h1 class="w3-container w3-center">예약하기</h1>
+				</div>
+			</header>
+			<div class="w3-container w3-margin">
+				<div class="form" style="width:50%; margin:0 auto;">
 					<dl>
 						<dt>회의제목</dt>
 						<dd>
@@ -137,35 +201,15 @@
 						</dd>
 					</dl>
 				</div>
-				
-				<div class="buttonWrap">
-					<button id="btnReserveBack" type="button" class="button dark">취소</button>
-					<button id="btnFormSubmmit" type="button" class="button prime">예약</button>
-				</div>
-
 			</div>
-			<!-- reserveDate -->
-			<div id="reserveSelect" class="formWrap date">
-				<div class="form">
-					<h2>선택한 예약</h2>
-					<div class="reserveInfo">제목을 여기에 넣으면 됩니다.</div>
-					<dl>
-						<dt>사번</dt>
-						<dd>
-							<label for="input_demo_09">사번</label>
-							<input type="text" id="input_demo_09" placeholder="사번">
-						</dd>
-					</dl>
+			<footer class="w3-container w3-grey">
+				<div class="w3-right w3-margin">
+					<button id="btnFormSubmmitCancel" class="button dark">Cancel</button>
+					<button id="btnFormSubmmit" class="button prime">OK</button>
 				</div>
-				<div class="buttonWrap">
-					<button id="reserveDataClose" type="button" class="button dark">취소</button>
-					<button id="" type="button" class="button warning">삭제</button>
-				</div>
-			</div>
+			</footer>
 		</div>
 	</div>
-</div>
-
-
 </body>
+
 </html>

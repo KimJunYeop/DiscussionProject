@@ -20,10 +20,11 @@ $(document).ready(function() {
 
 function init() {
 	fnTableInit();
+	// $("#wraps").removeClass("reserve");
 }
 
 function test() {
-	$( "#btnReserve" ).trigger( "click" );
+	// $( "#btnReserve" ).trigger( "click" );
 	// $('#subject').val("Reserver System 구축");
 	// $('#employee').val("김준엽");
 	// $('#phone').val("010-2312-1111");
@@ -61,7 +62,7 @@ function fnTableInit() {
 			if(i%6==0 && j == 0){
 				tableBodyStr += "<td rowspan='6' class='time'>"+(time++)+"</td>"
 			}
-			tableBodyStr += "<td data-time="+(time-1)+fnLeadingZeros(minute,2)+" data-date=" + fnReturnDate(daysArray[j]) + "></td>"
+			tableBodyStr += "<td data-time="+(time-1)+fnLeadingZeros(minute,2)+" data-date=" + fnReturnDate(daysArray[j]) + " data-key = 0 ></td>"
 		}
 		minute += 10;
 		if(minute == 60){
@@ -83,7 +84,11 @@ function fnTableValueInit() {
 			var findEndTime = result[key].endTime;
 			var timeArray = fnGetTimeBetweenArray(findStartTime,findEndTime);
 			for(var i = 0 ; i < timeArray.length ; i ++) {
-				$("td[data-date="+findDate+"][data-time="+timeArray[i]+"]").css('background-color','red').attr('data-key',key).html(title);
+				if(i==0){
+					$("td[data-date="+findDate+"][data-time="+timeArray[i]+"]").css('background-color','red').attr('data-key',key).html(title).addClass;
+				} else {
+					$("td[data-date="+findDate+"][data-time="+timeArray[i]+"]").css('background-color','red').attr('data-key',key);
+				}
 			}
 		}
 	})
@@ -190,14 +195,14 @@ function fnLeadingZeros(n, digits) {
  * reservationUi UI
 *****************************************/	
 function reservationUi () {
-	
-	$("#homeTitle, #btnHome, #btnReserveBack").click(function (){
+	$("#btnHome, #btnReserveBack").click(function (){
 		$("#btnHome").addClass("active").siblings().removeClass("active");
 		$("#wraps").removeClass("reserve");
 		$("#reserveFull").hide();
 		$("#reserveIng").show();
 		$("#reserveWrite").hide();
 		$("#navi").show();
+		
 	})
 	
 	$("#btnReserve").click(function (){
@@ -209,8 +214,6 @@ function reservationUi () {
 		$("#reserveWrite").show();
 	})
 	
-	
-	//
 	$("#reserveChoice").click(function (){
 		$("#reserveDate").addClass("active");
 	})
@@ -219,7 +222,6 @@ function reservationUi () {
 		$("#reserveDate").removeClass("active");
 	})
 	
-	//
 	$("#reserveDataClose").click(function (){
 		$("#reserveSelect").removeClass("active");
 	})
@@ -241,7 +243,7 @@ function reservationUi () {
 	$('#reserveTableBody td').unbind('click').mousedown(function(event){
 		event.preventDefault();
 		var key = $(this).attr('data-key');
-		if(key == undefined){
+		if(key == 0){
 			$(this).css('background-color','red');
 			$('#inputdate').val($(this).attr('data-date'));
 			$('#startTime').val($(this).attr('data-time'));
@@ -250,19 +252,30 @@ function reservationUi () {
 			})
 		} else {
 			//key값을 이용해서 data를 가져온다.
+			
 			fnGetAjaxSpecificKey(key);
 		}
-
 	});
 
 	$('#reserveTableBody td').unbind('click').mouseup(function(){
 		event.preventDefault();
 		var key = $(this).attr('data-key');
-		if(key == undefined){
+		if(key == 0){
 			$('#endTime').val($(this).attr('data-time'));
 			$('#reserveTableBody td').unbind('mouseenter mouseleave');
+			// document.getElementById('id01').style.display='block';
+			$('#id01').css('display','block');
 		}
 	});
+
+	$('#btnFormSubmmitCancel').unbind("click").bind("click",function(){
+		//지금 그렸던 css 모두 없애야해!
+		//그러면 data-key가 없는데 css 지정되어있는것들 다 없애!
+		// var csstd = $('#reserveTableBody td[style]');
+		// console.log($('#reserveTableBody td[style]'));
+		$('#reserveTableBody td[style][data-key=0]').css('background-color','');
+		$('#id01').css('display','none');
+	})
 };
 
 // reserveData
@@ -346,6 +359,8 @@ function fnAjaxWriteReserve() {
 		data: reserveData,
 		success: function(){
 			console.log('success!');
+			$('#id01').css('display','none');
+			fnTableValueInit();
 		} 
 	})
 }
@@ -394,7 +409,12 @@ function fnGetAjaxSpecificKey(key){
 				$('#subject').val(display.title);
 				$('#employee').val(display.employee);
 				$('#phone').val(display.phone);
-				$('#')
+				$('#inputdate').val(display.date);
+				$('#startTime').val(display.startTime);
+				$('#endTime').val(display.endTime);
+
+				// $("#wraps").addClass("reserve");
+				// $("#side").show();
 			} else {
 				console.log('error..');
 				return;
