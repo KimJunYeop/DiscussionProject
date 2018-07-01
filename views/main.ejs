@@ -30,7 +30,7 @@
 					<button type="button" id="homeTitle">
 						<h2>KJY LABS</h2>
 					</button>
-				</div>
+				</div>	
 
 				<button type="button" id="prev"> &#10094; </button>
 				<div class="fb_y" id="month"></div>
@@ -48,9 +48,9 @@
 			<!-- reserveIng -->
 			<div id="reserveIng" class="fb_xy">
 				<div class="info">
-					<strong>여기다가 제목</strong>
-					<span>09:10 ~ 10:10 시간</span>
-					<p>이름</p>
+					<strong id="curTitle">여기다가 제목</strong>
+					<span id="curTime">09:10 ~ 10:10 시간</span>
+					<p id="curEmployee">이름</p>
 				</div>
 			</div>
 			<!-- reserveFull -->
@@ -175,21 +175,21 @@
 			</header>
 			<div class="w3-container w3-margin">
 				<div class="form" style="width:50%; margin:0 auto;">
-					<dl>
+					<dl class="w3-margin">
 						<dt>회의제목</dt>
 						<dd>
 							<label for="subject">회의제목</label>
 							<input type="text" id="subject" placeholder="회의제목">
 						</dd>
 					</dl>
-					<dl>
+					<dl class="w3-margin">
 						<dt>담당자</dt>
 						<dd>
 							<label for="employee">담당자</label>
 							<input type="text" id="employee" placeholder="담당자">
 						</dd>
 					</dl>
-					<dl>
+					<dl class="w3-margin">
 						<dt>연락처</dt>
 						<dd>
 							<label for="phone">연락처</label>
@@ -197,7 +197,7 @@
 						</dd>
 					</dl>
 
-					<dl>
+					<dl class="w3-margin">
 						<dt>날짜</dt>
 						<dd>
 							<label for="inputdate">날짜</label>
@@ -205,7 +205,7 @@
 						</dd>
 					</dl>
 
-					<dl>
+					<dl class="w3-margin">
 						<dt>시간</dt>
 						<dd>
 							<label for="startTime">시작시간</label>

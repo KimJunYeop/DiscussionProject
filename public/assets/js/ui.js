@@ -7,11 +7,11 @@ var _weekNext = 0;
 var _key;
 
 $(document).ready(function() {
+	$("#month, #prev, #next").hide();
 	init();
 	brickUi();
 	clock();
 	test();
-
 	//test를 위한 
 	//setInterval : clock 1초마다 갱신.
 	setInterval('clock()', 1000);
@@ -76,8 +76,8 @@ function fnTableInit() {
 }
 
 function fnTableValueInit() {
+	var colorIndex = 0;
 	fnAjaxGetReserve(function(result){
-		var colorIndex = 0;
 		for(key in result) {
 			var findDate = result[key].date;
 			var title = result[key].title;
@@ -85,20 +85,27 @@ function fnTableValueInit() {
 			html += '<span class="w3-opacity">'
 			html += title;
 			html += '</span>'
+			var test = '1';
 			var lastHtml = '';
-			lastHtml += '<button class="w3-button w3-right w3-tinny">X</button>'
+			lastHtml += '<button onclick="fnAjaxDelete('+key+')" class="w3-button w3-right w3-tinny reserveDelete" data-key="'+key+'">X</button>'
+			var only = '';
+			only += html;
+			only += lastHtml;
 			var findStartTime = result[key].startTime;
 			var findEndTime = result[key].endTime;
 			var timeArray = fnGetTimeBetweenArray(findStartTime,findEndTime);
-			
+			console.log(timeArray.length);
 			for(var i = 0 ; i < timeArray.length ; i ++) {
 				if(i==0){
-					$("td[data-date="+findDate+"][data-time="+timeArray[i]+"]").attr('data-key',key).addClass(fnFontColorChange(colorIndex)).html(html);
+					if(timeArray.length == 1) {
+						$("td[data-date="+findDate+"][data-time="+timeArray[i]+"]").attr('data-key',key).addClass(fnFontColorChange(colorIndex)).html(only);
+					} else {
+						$("td[data-date="+findDate+"][data-time="+timeArray[i]+"]").attr('data-key',key).addClass(fnFontColorChange(colorIndex)).html(html);
+					}
 				} else if(i==(timeArray.length-1)){
 					$("td[data-date="+findDate+"][data-time="+timeArray[i]+"]").attr('data-key',key).addClass(fnFontColorChange(colorIndex)).html(lastHtml);
 				} else {
 					$("td[data-date="+findDate+"][data-time="+timeArray[i]+"]").attr('data-key',key).addClass(fnFontColorChange(colorIndex));
-
 				}
 			}
 			colorIndex++;
@@ -192,7 +199,6 @@ function fnAjaxGetReserve(resultReturn) {
 				resultReturn(result.resultJson)
 			} else {
 				console.log('fail');
-				return;
 			}
 		} 
 	})
@@ -223,14 +229,14 @@ function fnLeadingZeros(n, digits) {
  * reservationUi UI
 *****************************************/	
 function reservationUi () {
-	$("#btnHome, #btnReserveBack").click(function (){
+	$("#btnHome, #btnReserveBack, #homeTitle").click(function (){
 		$("#btnHome").addClass("active").siblings().removeClass("active");
 		$("#wraps").removeClass("reserve");
 		$("#reserveFull").hide();
 		$("#reserveIng").show();
 		$("#reserveWrite").hide();
+		$("#month, #prev, #next").hide();
 		$("#navi").show();
-		
 	})
 	
 	$("#btnReserve").click(function (){
@@ -240,6 +246,7 @@ function reservationUi () {
 		$("#reserveIng").hide();
 		$("#reserveFull").show();
 		$("#navi").hide();
+		$("#month, #prev, #next").show();
 	})
 	
 	$("#reserveChoice").click(function (){
@@ -268,8 +275,8 @@ function reservationUi () {
 		fnTableInit();
 	})
 
-	$('#reserveTableBody td').unbind('click').mousedown(function(event){
-		event.preventDefault();
+	$('#reserveTableBody td').mousedown(function(event){
+		event.stopPropagation;
 		var key = $(this).attr('data-key');
 		if(key == 0){
 			$(this).css('background-color','red');
@@ -287,8 +294,7 @@ function reservationUi () {
 		}
 	});
 
-	$('#reserveTableBody td').unbind('click').mouseup(function(){
-		event.preventDefault();
+	$('#reserveTableBody td').mouseup(function(){
 		var key = $(this).attr('data-key');
 		if(key == 0){
 			$('#endTime').val($(this).attr('data-time'));
@@ -298,20 +304,22 @@ function reservationUi () {
 		}
 	});
 
-	$('#btnFormSubmmitCancel').unbind("click").bind("click",function(){
+	$('#btnFormSubmmitCancel').on("click",function(){
 		$('#reserveTableBody td[style][data-key=0]').css('background-color','');
 		$('#id01').css('display','none');
 	})
 
-	$('#btnUpdateOk').unbind("click").bind("click",function() {
+	$('#btnUpdateOk').on("click",function() {
 
 		fnAjaxUpdate();
 	})
 
-	$('#btnUpdateCancel').unbind("click").bind("click",function() {
+	$('#btnUpdateCancel').on("click",function() {
 		$("#wraps").removeClass("reserve");
 		$("#reserveUpdate").hide();
 	})
+
+	
 };
 
 // reserveData
@@ -342,12 +350,17 @@ function clock() {
 	newDate.setDate(newDate.getDate());
 	// Output the day, date, month and year
 	//$('#Date').html(dayNames[newDate.getDay()] + " " + newDate.getDate() + ' ' + monthNames[newDate.getMonth()] + ' ' + newDate.getFullYear());
+	var checkDate = (newDate.getFullYear()).toString() + fnLeadingZeros(((newDate.getMonth()+1)).toString(),2) + fnLeadingZeros((newDate.getDate()).toString(),2);
+
 	$('#date').html(newDate.getFullYear() + '년 ' + _monthNames[newDate.getMonth()] + ' ' + newDate.getDate() + '일 ' + ' (' + _dayNames[newDate.getDay()] + ') 요일');
 
     var today = new Date();
     var hours = today.getHours();
     var minutes = today.getMinutes();
     var seconds = today.getSeconds();
+
+
+	fnCheckReserve(checkDate,fnLeadingZeros(hours,2),fnLeadingZeros(minutes,2));
 
     //Set the AM or PM time
     if (hours >= 12) {
@@ -374,10 +387,42 @@ function clock() {
         seconds = "0" + seconds;
     } else {
         seconds = seconds;
-    }
+	}
 	document.getElementById("clock").innerHTML = (hours + ":" + minutes + ":" + seconds + '<span>'+ meridiem +'</span>');			
 }
  
+function fnCheckReserve(checkDate,hour,minute) {
+	var time = hour.toString() + minute.toString();
+	var data = {
+		date : checkDate,
+		time : time
+	}
+
+	$.ajax({
+		type: "POST",
+		url: "/reserveCheck",
+		data:data,
+		success: function(result) {
+			if(result.resCode == 'success') {
+				var parseReply = JSON.parse(result.reply);
+				var time = '';
+				var startTime = parseReply.startTime;
+				var endTime = parseReply.endTime;
+
+				$('#curTitle').html(parseReply.title);
+				time += startTime.substring(0,2) + " : " + startTime.substring(2,4);
+				time += ' ~ ';
+				time += endTime.substring(0,2) + " : " + endTime.substring(2,4);
+				$('#curTime').html(time);
+				$('#curEmployee').html(parseReply.employee);
+
+				console.log(time);
+			}
+		}
+	})
+
+}
+
 function fnAjaxWriteReserve() {
 
 	var reserveData = {
@@ -400,9 +445,6 @@ function fnAjaxWriteReserve() {
 	})
 }
 
-function fnGetWeek(){
-	
-}
 
 Date.prototype.getWeek = function(start) 
 { 
@@ -471,7 +513,31 @@ function fnAjaxUpdate() {
 		url: "/reserveUpdate",
 		data: data,
 		success : function(result) {
+			init();
+			$("#wraps").removeClass("reserve");
+			$("#reserveUpdate").hide();
+		}
+	})
+}
+
+function fnAjaxDelete(key) {
+	var data = {
+		key : key
+	}
+
+	$.ajax({
+		type: "POST",
+		url: "/reserveDelete",
+		data: data,
+		success : function(result) {
+			if(result.resCode == 'false'){
+				console.log('delete err');
+				return;
+			}
 			
+			$("#wraps").removeClass("reserve");
+			$("#reserveUpdate").hide();
+			init();
 		}
 	})
 }
