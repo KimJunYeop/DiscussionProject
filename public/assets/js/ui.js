@@ -4,8 +4,7 @@ var _dayNames = ["일", "월", "화", "수", "목", "금", "토"]
 var _monthdays = new Array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
 
 var _weekNext = 0;
-
-var _mouseflag = 1;
+var _key;
 
 $(document).ready(function() {
 	init();
@@ -19,6 +18,7 @@ $(document).ready(function() {
 });
 
 function init() {
+	$("#reserveUpdate").hide();
 	fnTableInit();
 	// $("#wraps").removeClass("reserve");
 }
@@ -77,22 +77,50 @@ function fnTableInit() {
 
 function fnTableValueInit() {
 	fnAjaxGetReserve(function(result){
+		var colorIndex = 0;
 		for(key in result) {
 			var findDate = result[key].date;
 			var title = result[key].title;
+			var html = '';
+			html += '<span class="w3-opacity">'
+			html += title;
+			html += '</span>'
+			var lastHtml = '';
+			lastHtml += '<button class="w3-button w3-right w3-tinny">X</button>'
 			var findStartTime = result[key].startTime;
 			var findEndTime = result[key].endTime;
 			var timeArray = fnGetTimeBetweenArray(findStartTime,findEndTime);
+			
 			for(var i = 0 ; i < timeArray.length ; i ++) {
 				if(i==0){
-					$("td[data-date="+findDate+"][data-time="+timeArray[i]+"]").css('background-color','red').attr('data-key',key).html(title).addClass;
+					$("td[data-date="+findDate+"][data-time="+timeArray[i]+"]").attr('data-key',key).addClass(fnFontColorChange(colorIndex)).html(html);
+				} else if(i==(timeArray.length-1)){
+					$("td[data-date="+findDate+"][data-time="+timeArray[i]+"]").attr('data-key',key).addClass(fnFontColorChange(colorIndex)).html(lastHtml);
 				} else {
-					$("td[data-date="+findDate+"][data-time="+timeArray[i]+"]").css('background-color','red').attr('data-key',key);
+					$("td[data-date="+findDate+"][data-time="+timeArray[i]+"]").attr('data-key',key).addClass(fnFontColorChange(colorIndex));
+
 				}
 			}
+			colorIndex++;
 		}
 	})
 	reservationUi()
+}
+
+function fnFontColorChange(num){
+	var result = '';
+	if((num%5) == 0){ 
+		result = 'w3-panel w3-pink';
+	} else if ((num%5) == 1) {
+		result = 'w3-panel w3-orange';
+	} else if ((num%5) == 2) {
+		result = 'w3-panel w3-yellow';
+	} else if ((num%5) == 3) { 
+		reuslt = 'w3-panel w3-blue';
+	} else if ((num%5) == 4){
+		result = 'w3-panel w3-light-grey';
+	} else {}
+	return result;
 }
 
 function fnGetTimeBetweenArray(startTime,endTime){
@@ -207,11 +235,11 @@ function reservationUi () {
 	
 	$("#btnReserve").click(function (){
 		$("#btnReserve").addClass("active").siblings().removeClass("active");
-		$("#wraps").addClass("reserve");
+		$("#wraps").removeClass("reserve");
+		$("#reserveUpdate").hide();
 		$("#reserveIng").hide();
 		$("#reserveFull").show();
 		$("#navi").hide();
-		$("#reserveWrite").show();
 	})
 	
 	$("#reserveChoice").click(function (){
@@ -252,7 +280,9 @@ function reservationUi () {
 			})
 		} else {
 			//key값을 이용해서 data를 가져온다.
-			
+			$("#wraps").addClass("reserve");
+			$("#reserveUpdate").show();
+			_key = key;
 			fnGetAjaxSpecificKey(key);
 		}
 	});
@@ -269,12 +299,18 @@ function reservationUi () {
 	});
 
 	$('#btnFormSubmmitCancel').unbind("click").bind("click",function(){
-		//지금 그렸던 css 모두 없애야해!
-		//그러면 data-key가 없는데 css 지정되어있는것들 다 없애!
-		// var csstd = $('#reserveTableBody td[style]');
-		// console.log($('#reserveTableBody td[style]'));
 		$('#reserveTableBody td[style][data-key=0]').css('background-color','');
 		$('#id01').css('display','none');
+	})
+
+	$('#btnUpdateOk').unbind("click").bind("click",function() {
+
+		fnAjaxUpdate();
+	})
+
+	$('#btnUpdateCancel').unbind("click").bind("click",function() {
+		$("#wraps").removeClass("reserve");
+		$("#reserveUpdate").hide();
 	})
 };
 
@@ -358,7 +394,6 @@ function fnAjaxWriteReserve() {
 		url: "/reserveWrite",
 		data: reserveData,
 		success: function(){
-			console.log('success!');
 			$('#id01').css('display','none');
 			fnTableValueInit();
 		} 
@@ -406,19 +441,37 @@ function fnGetAjaxSpecificKey(key){
 			console.log(result);
 			if(result.resCode == 'true') {
 				var display = JSON.parse(result.resultJson);
-				$('#subject').val(display.title);
-				$('#employee').val(display.employee);
-				$('#phone').val(display.phone);
-				$('#inputdate').val(display.date);
-				$('#startTime').val(display.startTime);
-				$('#endTime').val(display.endTime);
-
-				// $("#wraps").addClass("reserve");
-				// $("#side").show();
+				$('#input_demo_01').val(display.title);
+				$('#input_demo_02').val(display.employee);
+				$('#input_demo_03').val(display.phone);
+				$('#input_demo_04').val(display.date);
+				$('#input_demo_05').val(display.startTime);
+				$('#input_demo_06').val(display.endTime);
 			} else {
 				console.log('error..');
 				return;
 			}
 		} 
+	})
+}
+
+function fnAjaxUpdate() {
+
+	var data = { 
+		title: $('#input_demo_01').val(),
+		employee: $('#input_demo_02').val(),
+		phone: $('#input_demo_03').val(),
+		date: $('#input_demo_04').val(), 
+		startTime: $('#input_demo_05').val(),
+		endTime: $('#input_demo_06').val(),
+	}
+
+	$.ajax({
+		type: "POST",
+		url: "/reserveUpdate",
+		data: data,
+		success : function(result) {
+			
+		}
 	})
 }

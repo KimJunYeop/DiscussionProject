@@ -95,58 +95,74 @@
 
 			<!-- reserveWrite -->
 			<div id="reserveUpdate">
-				<div class="formWrap">
+				<div style="margin:20px; margin-top:200px;">
+					<button class="w3-button w3-grey w3-block" type="button">
+						<span>회의상세</span>
+					</button>
+				</div>
+
+				<div id="reserveUpdateForm" class="formWrap w3-display-middle">
 					<div id="updateForm" class="form">
-						<h2>예약내용</h2>
-
-						<div class="reserveChoice i zmdi-calendar-alt" id="reserveChoice"> 날짜를 선택해 주세요.
-							<!--(목요일) 09:10 ~ 10: 10 -->
-						</div>
-
-						<dl>
-							<dt>사번</dt>
-							<dd>
-								<div class="inputWrap">
-									<input id="inputDefault4" type="text" placeholder="사번">
-									<label for="inputDefault4">사번</label>
-									<div class="addon">
-										<button class="hding button dark" type="button">
-											<span>조회</span>
-										</button>
-									</div>
-								</div>
-							</dd>
-						</dl>
-
 						<dl>
 							<dt>회의제목</dt>
 							<dd>
-								<label for="input_demo_01">회의제목</label>
+								<button class="w3-button w3-green w3-block" type="button">
+									<span>회의제목</span>
+								</button>
 								<input id="input_demo_01" type="text" placeholder="회의제목">
 							</dd>
 						</dl>
 
 						<dl>
-							<dt>담당자</dt>
 							<dd>
-								<label for="input_demo_02">담당자</label>
+								<button class="w3-button w3-green w3-block" type="button">
+									<span>담당자</span>
+								</button>
 								<input id="input_demo_02" type="text" placeholder="담당자">
 							</dd>
 						</dl>
 
 						<dl>
-							<dt>연락처</dt>
 							<dd>
-								<label for="input_demo_03">연락처</label>
+								<button class="w3-button w3-green w3-block" type="button">
+									<span>연락처</span>
+								</button>
 								<input id="input_demo_03" type="text" placeholder="연락처">
 							</dd>
 						</dl>
+
+						<dl>
+							<dd>
+								<button class="w3-button w3-green w3-block" type="button">
+									<span>날짜</span>
+								</button>
+								<input id="input_demo_04" type="text" placeholder="날짜">
+							</dd>
+						</dl>
+						<dl>
+							<dd>
+								<button class="w3-button w3-green w3-block" type="button">
+									<span>시작시간</span>
+								</button>
+								<input id="input_demo_05" type="text" placeholder="시작시간">
+							</dd>
+						</dl>
+						<dl>
+							<dd>
+								<button class="w3-button w3-green w3-block" type="button">
+									<span>종료시간</span>
+								</button>
+								<input id="input_demo_06" type="text" placeholder="종료시간">
+							</dd>
+						</dl>
 					</div>
-					<div class="buttonWrap">
+					<div class="buttonWrap" style="margin-top:20px;">
 						<button id="btnUpdateCancel" type="button" class="button dark">취소</button>
+						<button id="btnUpdateOk" type="button" class="button dark">수정</button>
 					</div>
 				</div>
 			</div>
+
 		</div>
 	</div>
 	<div id="id01" class="w3-modal">

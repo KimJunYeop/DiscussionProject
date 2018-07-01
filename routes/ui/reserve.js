@@ -71,6 +71,16 @@ router.post('/reserveGetByKey',function(req,res){
   });
 })
 
+router.post('/reserveUpdate', function(req,res) {
+  var inputData = req.body;
+  console.log(inputData);
+  client.hset('reserve',key,JSON.stringify(inputData),function(err,reply){ 
+    if(err) return;
+
+    res.send();
+  });
+})
+
 router.get('/a',function(req,res){
   res.render('calendar');
 })
