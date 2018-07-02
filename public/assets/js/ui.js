@@ -11,7 +11,6 @@ $(document).ready(function() {
 	init();
 	brickUi();
 	clock();
-	test();
 	//test를 위한 
 	//setInterval : clock 1초마다 갱신.
 	setInterval('clock()', 1000);
@@ -325,8 +324,8 @@ function fnSubmmitValidation() {
 	var employee = $('#employee').val();
 	var phone =  $('#phone').val();
 
-	var startTime = $('#startTime').val();
-	var endTime = $('#endTime').val();
+	// var startTime = $('#startTime').val();
+	// var endTime = $('#endTime').val();
 
 
 	if(title == ''){
@@ -346,19 +345,21 @@ function fnSubmmitValidation() {
 		$('#phone').addClass('w3-border-red');
 		$('#phone').focus();
 		result = false;
-	} else if (startTime == '') {
-		alert('시작시간을 입력하시오.');
-		$('#phone').removeClass('w3-border-red');
-		$('#startTime').addClass('w3-border-red');
-		$('#startTime').focus();
-		result = false;
-	} else if (endTime == '') {
-		alert('시작시간을 입력하시오.');
-		$('#startTime').removeClass('w3-border-red');
-		$('#endTime').addClass('w3-border-red');
-		$('#endTime').focus();
-		result = false;
-	} 
+	} else{}
+	
+	// else if (startTime == '') {
+	// 	alert('시작시간을 입력하시오.');
+	// 	$('#phone').removeClass('w3-border-red');
+	// 	$('#startTime').addClass('w3-border-red');
+	// 	$('#startTime').focus();
+	// 	result = false;
+	// } else if (endTime == '') {
+	// 	alert('시작시간을 입력하시오.');
+	// 	$('#startTime').removeClass('w3-border-red');
+	// 	$('#endTime').addClass('w3-border-red');
+	// 	$('#endTime').focus();
+	// 	result = false;
+	// } 
 
 
 	// date: $('#inputdate').val(), 
