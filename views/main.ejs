@@ -13,7 +13,7 @@
 	<link rel="stylesheet" type="text/css" href="plugin/w3css/w3.css">
 	<script type="text/javascript" src="plugin/jquery/jquery.js"></script>
 	<script type="text/javascript" src="plugin\jquery-ui\jquery-ui.js"></script>
-
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<!-- plugin -->
 	<link rel="stylesheet" type="text/css" href="plugin/brick_UI/brick_UI.css">
 	<link rel="stylesheet" type="text/css" href="plugin/material-iconic-font/css/material-design-iconic-font.min.css">
@@ -52,6 +52,7 @@
 					<strong id="curTitle"></strong>
 					<span id="curTime"></span>
 					<p id="curEmployee"></p>
+					<p id="curPhone"></p>
 				</div>
 			</div>
 			<!-- reserveFull -->
@@ -84,11 +85,11 @@
 
 			<!-- reserveWrite -->
 			<div id="reserveUpdate">
-				<div style="margin:20px; margin-top:200px;">
+				<!-- <div style="margin:20px; margin-top:200px;">
 					<button class="w3-button w3-grey w3-block" type="button">
 						<span>회의상세</span>
 					</button>
-				</div>
+				</div> -->
 
 				<div id="reserveUpdateForm" class="formWrap w3-display-middle">
 					<div id="updateForm" class="form">
@@ -129,19 +130,25 @@
 							</dd>
 						</dl>
 						<dl>
-							<dd>
+							<dd class="w3-margin">
 								<button class="w3-button w3-green w3-block" type="button">
 									<span>시작시간</span>
 								</button>
-								<input id="input_demo_05" type="text" placeholder="시작시간">
+								<button id="startTimeUp" class="w3-right w3-large"><i class="fa fa-caret-square-o-up"></i></button>
+								<input id="input_demo_05" type="text" placeholder="시작시간" disabled>
+								<button id="startTimeDown" class="w3-right w3-large"><i class="fa fa-caret-square-o-down"></i></button>
 							</dd>
 						</dl>
 						<dl>
-							<dd>
+							<dd class="w3-margin">
 								<button class="w3-button w3-green w3-block" type="button">
 									<span>종료시간</span>
 								</button>
-								<input id="input_demo_06" type="text" placeholder="종료시간">
+								<div class="w3-row">
+									<button id="endTimeUp" class="w3-right w3-large"><i class="fa fa-caret-square-o-up"></i></button>
+									<input id="input_demo_06" type="text" placeholder="종료시간" disabled>
+									<button id="endTimeDown" class="w3-right w3-large"><i class="fa fa-caret-square-o-down"></i></button>
+								</div>
 							</dd>
 						</dl>
 					</div>

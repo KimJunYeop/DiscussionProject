@@ -11,7 +11,6 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/reserveWrite', function (req, res) {
-  console.log('## POST /reserveWrite');
   var inputData = req.body;
   var maxIndex;
   client.hkeys("reserve", function (err, reply) {
@@ -33,7 +32,6 @@ router.post('/reserveWrite', function (req, res) {
 })
 
 router.post('/reserveGet', function (req, res) {
-  console.log('## POST / /reserveGet');
   var daysArray = req.body.daysArray;
   var _result = {
     response: 'false',
@@ -74,7 +72,8 @@ router.post('/reserveGetByKey', function (req, res) {
 
 router.post('/reserveUpdate', function (req, res) {
   var inputData = req.body;
-  client.hset('reserve', key, JSON.stringify(inputData), function (err, reply) {
+  console.log(req.body.key);
+  client.hset('reserve', req.body.key, JSON.stringify(inputData), function (err, reply) {
     if (err) return;
     res.send();
   });
@@ -82,8 +81,6 @@ router.post('/reserveUpdate', function (req, res) {
 
 
 router.post('/reserveDelete', function (req, res) {
-  console.log('reserveDelete');
-
   var key = req.body.key;
   var result = {
     resCode: 'false',

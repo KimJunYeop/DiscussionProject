@@ -69,7 +69,6 @@ function fnTableInit() {
 }
 
 function fnTableValueInit() {
-	var colorIndex = 0;
 	fnAjaxGetReserve(function(result){
 		for(key in result) {
 			var findDate = result[key].date;
@@ -86,6 +85,11 @@ function fnTableValueInit() {
 			var findStartTime = result[key].startTime;
 			var findEndTime = result[key].endTime;
 			var timeArray = fnGetTimeBetweenArray(findStartTime,findEndTime);
+
+			if(timeArray.length == 0){ 
+				$("td[data-date="+findDate+"][data-time="+findStartTime+"]").attr('data-key',key).addClass('w3-panel w3-pink').html(only);
+			}
+
 			for(var i = 0 ; i < timeArray.length ; i ++) {
 				if(i==0){
 					if(timeArray.length == 1) {
@@ -94,12 +98,11 @@ function fnTableValueInit() {
 						$("td[data-date="+findDate+"][data-time="+timeArray[i]+"]").attr('data-key',key).addClass('w3-panel w3-pink').html(html);
 					}
 				} else if(i==(timeArray.length-1)){
-					$("td[data-date="+findDate+"][data-time="+timeArray[i]+"]").attr('data-key',key).addClass('w3-panel w3-pink').html(lastHtml);
+					$("td[data-date="+findDate+"][data-time="+timeArray[i]+"]").attr('data-key',key).addClass('w3-panel w3-grey').html(lastHtml);
 				} else {
 					$("td[data-date="+findDate+"][data-time="+timeArray[i]+"]").attr('data-key',key).addClass('w3-panel w3-pink').html('');
 				}
 			}
-			colorIndex++;
 		}
 	})
 	reservationUi()
@@ -141,7 +144,7 @@ function fnGetTimeBetweenArray(startTime,endTime){
 		}
 		timeValue = startTimeHour.toString() + fnLeadingZeros(startTimeMinute.toString(),2);
 	}
-	timeArray.push(endTime);
+	// timeArray.push(endTime);
 	return timeArray;
 }
 
@@ -220,6 +223,8 @@ function fnLeadingZeros(n, digits) {
  * reservationUi UI
 *****************************************/	
 function reservationUi () {
+	
+
 	$("#btnHome, #btnReserveBack, #homeTitle").click(function (){
 		$("#btnHome").addClass("active").siblings().removeClass("active");
 		$("#wraps").removeClass("reserve");
@@ -255,6 +260,8 @@ function reservationUi () {
 
 	$("#btnFormSubmmit").unbind('click').bind('click',function(){
 		if(fnSubmmitValidation()) {
+			$("#wraps").removeClass("reserve");
+			$("#reserveUpdate").hide();
 			fnAjaxWriteReserve();
 		} else {
 			return;
@@ -271,23 +278,45 @@ function reservationUi () {
 		fnTableInit();
 	})
 
-	$('#reserveTableBody td').mousedown(function(event){
-		event.stopPropagation;
+	$('#reserveTableBody td').unbind('click').mousedown(function(event){
+		event.stopPropagation();
 		var key = $(this).attr('data-key');
-		if(key == 0){
-			$(this).css('background-color','red');
-			$('#inputdate').val($(this).attr('data-date'));
-			$('#startTime').val($(this).attr('data-time'));
-			$('#reserveTableBody td').hover(function(){
-				$(this).css('background-color','red');
-			})
+		var date = $(this).attr('data-date');
+		var getClass = $(this).attr('class');
+		if(getClass == 'time') {
+			return;
 		} else {
-			//key값을 이용해서 data를 가져온다.
-			$("#wraps").addClass("reserve");
-			$("#reserveUpdate").show();
-			_key = key;
-			fnGetAjaxSpecificKey(key);
+			if(key == 0){
+				$(this).css('background-color','red');
+				$('#inputdate').val($(this).attr('data-date'));
+				$('#startTime').val($(this).attr('data-time'));
+				$('#reserveTableBody td').hover(function(){
+					//date가 또 아닐때 걸러내야한다.
+					if($(this).css('background-color')=='rgb(233, 30, 99)' || $(this).css('background-color')=='rgb(158, 158, 158)') {
+						alert('이미 시간대에 회의가 존재합니다.');
+						$('#reserveTableBody td[style][data-key=0]').css('background-color','');
+						$('#reserveTableBody td').unbind('mouseenter mouseleave');
+						return;
+					}
+	
+					if($(this).attr('data-date') != date) {
+						alert('선택 날짜 영역을 벗어났습니다.');
+						$('#reserveTableBody td[style][data-key=0]').css('background-color','');
+						$('#reserveTableBody td').unbind('mouseenter mouseleave');
+						return;
+					}
+	
+					$(this).css('background-color','red');
+				})
+			} else {
+				//key값을 이용해서 data를 가져온다.
+				$("#wraps").addClass("reserve");
+				$("#reserveUpdate").show();
+				_key = key;
+				fnGetAjaxSpecificKey(key);
+			}
 		}
+
 	});
 
 	$('#reserveTableBody td').mouseup(function(){
@@ -305,18 +334,285 @@ function reservationUi () {
 		$('#id01').css('display','none');
 	})
 
-	$('#btnUpdateOk').on("click",function() {
-
-		fnAjaxUpdate();
+	$('#btnUpdateOk').unbind('click').bind("click",function() {
+		// console.log(_key);
+		if(fnUpdateValidation()) {
+			fnAjaxUpdate();
+			init();
+		} else {
+			return;
+		}
 	})
 
 	$('#btnUpdateCancel').on("click",function() {
 		$("#wraps").removeClass("reserve");
 		$("#reserveUpdate").hide();
-	})
+	});
+
+	$('#startTimeUp').unbind('click').bind('click',function(event){
+		var startTime = $('#input_demo_05').val();
+		if(startTime.length == 3){ 
+			var minute = startTime.substring(1,3);
+			var hour = startTime.substring(0,1);
+			minute = parseInt(minute);
+			minute += 10;
+			if(minute == 60) {
+				minute = '00';
+				hour = parseInt(hour);
+				hour += 1;
+			}
+			minute = minute.toString();
+			hour = hour.toString();
+			$('#input_demo_05').val(hour+minute);
+		} else {
+			var minute = startTime.substring(2,4);
+			var hour = startTime.substring(0,2);
+			minute = parseInt(minute);
+			minute += 10;
+			if(minute == 60) {
+				minute = '00';
+				hour = parseInt(hour);
+				hour += 1;
+			}
+			minute = minute.toString();
+			hour = hour.toString();
+			$('#input_demo_05').val(hour+minute);
+		}
+	});
+
+	$('#startTimeDown').unbind('click').bind('click',function(){
+		var startTime = $('#input_demo_05').val();
+		if(startTime.length == 3){ 
+			var minute = startTime.substring(1,3);
+			var hour = startTime.substring(0,1);
+			minute = parseInt(minute);
+			minute -= 10;
+			if(minute == 0){
+				minute = '00';
+			}else if(minute < 0){
+				minute = '50';
+				hour = parseInt(hour);
+				hour -= 1;
+			}
+			minute = minute.toString();
+			hour = hour.toString();
+			$('#input_demo_05').val(hour+minute);
+		} else {
+			var minute = startTime.substring(2,4);
+			var hour = startTime.substring(0,2);
+			minute = parseInt(minute);
+			minute -= 10;
+			if(minute == 0){
+				minute = '00';
+			}else if(minute < 0){
+				minute = '50';
+				hour = parseInt(hour);
+				hour -= 1;
+			}
+			minute = minute.toString();
+			hour = hour.toString();
+			$('#input_demo_05').val(hour+minute);
+		}
+	});
+
+	$('#endTimeUp').unbind('click').bind('click',function(){
+		var endTime = $('#input_demo_06').val();
+		if(endTime.length == 3){ 
+			var minute = endTime.substring(1,3);
+			var hour = endTime.substring(0,1);
+			minute = parseInt(minute);
+			minute += 10;
+			if(minute == 60) {
+				minute = '00';
+				hour = parseInt(hour);
+				hour += 1;
+			}
+			minute = minute.toString();
+			hour = hour.toString();
+			$('#input_demo_06').val(hour+minute);
+		} else {
+			var minute = endTime.substring(2,4);
+			var hour = endTime.substring(0,2);
+			minute = parseInt(minute);
+			minute += 10;
+			if(minute == 60) {
+				minute = '00';
+				hour = parseInt(hour);
+				hour += 1;
+			}
+			minute = minute.toString();
+			hour = hour.toString();
+			$('#input_demo_06').val(hour+minute);
+		}
+	});
+
+	$('#endTimeDown').unbind('click').bind('click',function(){
+		var endTime = $('#input_demo_06').val();
+		if(endTime.length == 3){ 
+			var minute = endTime.substring(1,3);
+			var hour = endTime.substring(0,1);
+			minute = parseInt(minute);
+			minute -= 10;
+			if(minute == 0){
+				minute = '00';
+			}else if(minute < 0){
+				minute = '50';
+				hour = parseInt(hour);
+				hour -= 1;
+			}
+			minute = minute.toString();
+			hour = hour.toString();
+			$('#input_demo_06').val(hour+minute);
+		} else {
+			var minute = endTime.substring(2,4);
+			var hour = endTime.substring(0,2);
+			minute = parseInt(minute);
+			minute -= 10;
+			if(minute == 0){
+				minute = '00';
+			}else if(minute < 0){
+				minute = '50';
+				hour = parseInt(hour);
+				hour -= 1;
+			}
+			minute = minute.toString();
+			hour = hour.toString();
+			$('#input_demo_06').val(hour+minute);
+		}
+	});
+
+	$('.reserveDelete').unbind('click').bind('click',function() {
+		console.log()
+	});
+};
+
+
+function fnUpdateValidation() {
+	var result = true;
+	var title = $('#input_demo_01').val();
+	var employee = $('#input_demo_02').val();
+	var phone =  $('#input_demo_03').val();
+
+	var startTime = $('#input_demo_05').val();
+	var endTime = $('#input_demo_06').val();
+
+	if(title == ''){
+		alert('제목을 입력하세요.');
+		$('#input_demo_01').addClass('w3-border-red');
+		$('#input_demo_01').focus();
+		result = false;
+	} else if(employee == ''){
+		alert('담당자를 입력하세요.');
+		$('#input_demo_01').removeClass('w3-border-red');
+		$('#input_demo_02').addClass('w3-border-red');
+		$('#input_demo_02').focus();
+		result = false;
+	} else if(phone == ''){
+		alert('핸드폰번호를 입력하세요.');
+		$('#input_demo_02').removeClass('w3-border-red');
+		$('#input_demo_03').addClass('w3-border-red');
+		$('#input_demo_03').focus();
+		result = false;
+	} else{}
 
 	
-};
+
+	if(startTime.length > 4) {
+		alert('시작시간 형식 재확인 바랍니다.(hhmm)');
+		$('#input_demo_05').addClass('w3-border-red');
+		$('#input_demo_05').focus();
+		result = false;
+	}
+
+	if(endTime.length > 4) {
+		alert('종료시간 형식 재확인 바랍니다.(hhmm)');
+		$('#input_demo_06').addClass('w3-border-red');
+		$('#input_demo_06').focus();
+		result = false;
+	}
+
+	if(startTime.length == 3) {
+		var startHour = startTime.substring(0,1);
+		var startMinute = startTime.substring(1,3);
+		if(parseInt(startMinute) >= 59) {
+			alert('시작시간의 분은 60을 넘길 수 없습니다.');
+			$('#input_demo_05').focus();
+			$('#input_demo_05').val(startHour+'50');
+			result = false;
+		} else if(parseInt(startHour) < 8) {
+			alert('시작 시간은 8시부터입니다.');
+			$('#input_demo_05').focus();
+			$('#input_demo_05').val('8' + startMinute);
+			result = false;
+		} 
+	} else {
+		var startHour = startTime.substring(0,2);
+		var startMinute = startTime.substring(2,4);
+
+		if(parseInt(startMinute) >= 59) {
+			alert('시작시간의 분은 60을 넘길 수 없습니다.');
+			$('#input_demo_05').val(startHour+'50');
+			result = false;
+		} else if(parseInt(startHour) > 17) {
+			alert('시작 시간은 17시 까지 입니다.');
+			$('#input_demo_05').val('17' + startMinute);
+			result = false;
+		} else if(parseInt(startHour) < 8) {
+			alert('시작시간은 8시부터입니다.');
+			$('#input_demo_05').focus();
+			$('#input_demo_05').val('8' + startMinute);
+			result = false;
+		}
+
+		if(startTime.substring(0,1) == '0'){
+			$('#input_demo_05').val(startTime.substring(1,2)+startMinute);
+		}
+	}
+
+	if(endTime.length == 3) {
+		var endtHour = endTime.substring(0,1);
+		var endMinute = endTime.substring(1,3);
+		if(parseInt(endMinute) >= 59) {
+			alert('종료 시간의 분은 60을 넘길 수 없습니다.');
+			$('#input_demo_06').val(endtHour+'50');
+			result = false;
+		} else if(parseInt(endtHour) < 8) {
+			alert('종료 시간은 8시부터입니다.');
+			$('#input_demo_06').val('8' + endMinute);
+			result = false;
+		}
+	} else {
+		var endtHour = endTime.substring(0,2);
+		var endMinute = endTime.substring(2,4);
+
+		if(parseInt(endMinute) >= 59) {
+			alert('종료 시간의 분은 60을 넘길 수 없습니다.');
+			$('#input_demo_06').val(endtHour+'50');
+			result = false;
+		} else if(parseInt(endtHour) > 17) {
+			alert('종료 시간은 17시 까지 입니다.');
+			$('#input_demo_06').val('17' + endMinute);
+			result = false;
+		}else if(parseInt(endtHour) < 8) {
+			alert('시작시간은 8시부터입니다.');
+			$('#input_demo_05').val('8'+startMinute);
+			result = false;
+		}
+	}
+
+	if(parseInt(endTime) < parseInt(startTime)){ 
+		alert('종료시간이 시작시간보다 앞서있습니다. 시간을 조정하십시오.');
+		$('#input_demo_05').addClass('w3-border-red');
+		$('#input_demo_06').addClass('w3-border-red');
+		$('#input_demo_05').focus();
+		result = false;
+	}
+	return result;
+}
+
+function fnCheckMinute() {
+
+}
 
 function fnSubmmitValidation() {
 	var result = true;
@@ -346,7 +642,7 @@ function fnSubmmitValidation() {
 		$('#phone').focus();
 		result = false;
 	} else{}
-	
+	$('#phone').removeClass('w3-border-red');
 	// else if (startTime == '') {
 	// 	alert('시작시간을 입력하시오.');
 	// 	$('#phone').removeClass('w3-border-red');
@@ -360,8 +656,6 @@ function fnSubmmitValidation() {
 	// 	$('#endTime').focus();
 	// 	result = false;
 	// } 
-
-
 	// date: $('#inputdate').val(), 
 	// startTime: $('#startTime').val(),
 	// endTime: $('#endTime').val()
@@ -460,7 +754,6 @@ function fnCheckReserve(checkDate,hour,minute) {
 				var endMinute;
 
 				$('#curTitle').html(parseReply.title);
-				console.log(startTime.substring(0,1));
 				if(startTime.length == 3) {
 					startHour = startTime.substring(0,1);
 					startMinute = startTime.substring(1,3);
@@ -483,11 +776,12 @@ function fnCheckReserve(checkDate,hour,minute) {
 
 				$('#curTime').html(time);
 				$('#curEmployee').html(parseReply.employee);
-
+				$('#curPhone').html(parseReply.phone);
 			} else  {
-				$('#curTitle').html("해당 시간의 회의일정이 없습니다.");
+				$('#curTitle').html("현재 회의실에 회의일정이 없습니다.");
 				$('#curTime').html('');
-				$('#curEmployee').html('');
+				$('#curEmployee').html('회의일정을 등록해주세요.');
+				$('#curPhone').html('');
 			}
 		}
 	})
@@ -551,7 +845,6 @@ function fnGetAjaxSpecificKey(key){
 		url: "/reserveGetByKey",
 		data: data,
 		success: function(result){
-			console.log(result);
 			if(result.resCode == 'true') {
 				var display = JSON.parse(result.resultJson);
 				$('#input_demo_01').val(display.title);
@@ -569,7 +862,6 @@ function fnGetAjaxSpecificKey(key){
 }
 
 function fnAjaxUpdate() {
-
 	var data = { 
 		title: $('#input_demo_01').val(),
 		employee: $('#input_demo_02').val(),
@@ -577,14 +869,14 @@ function fnAjaxUpdate() {
 		date: $('#input_demo_04').val(), 
 		startTime: $('#input_demo_05').val(),
 		endTime: $('#input_demo_06').val(),
+		key: _key
 	}
 
 	$.ajax({
 		type: "POST",
 		url: "/reserveUpdate",
 		data: data,
-		success : function(result) {
-			init();
+		success : function() {
 			$("#wraps").removeClass("reserve");
 			$("#reserveUpdate").hide();
 		}
