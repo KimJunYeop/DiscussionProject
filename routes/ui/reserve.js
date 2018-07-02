@@ -6,42 +6,44 @@ var client = redis.createClient(6379, "127.0.0.1");
 var reserve = require('../api/reserve.js');
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
   res.render('main');
 });
 
-router.post('/reserveWrite', function(req,res){ 
+router.post('/reserveWrite', function (req, res) {
   console.log('## POST /reserveWrite');
   var inputData = req.body;
   var maxIndex;
-  client.hkeys("reserve",function(err,reply){
+  client.hkeys("reserve", function (err, reply) {
     var keysArray = new Array();
-    if(reply.length == 0) {
+    if (reply.length == 0) {
       maxIndex = 1;
     } else {
-      reply.forEach(function(reply,index){
+      reply.forEach(function (reply, index) {
         keysArray.push(parseInt(reply));
       })
       maxIndex = Math.max.apply(null, keysArray) || 1;
       maxIndex++;
     }
-    client.hset('reserve',maxIndex,JSON.stringify(inputData),redis.print);
-    res.send();
+    client.hset('reserve', maxIndex, JSON.stringify(inputData), function (err, reply) {
+      if (err) return;
+      res.send();
+    });
   })
 })
 
-router.post('/reserveGet',function(req,res) {
+router.post('/reserveGet', function (req, res) {
   console.log('## POST / /reserveGet');
   var daysArray = req.body.daysArray;
   var _result = {
-    response : 'false',
-    resultJson : {}
+    response: 'false',
+    resultJson: {}
   }
-  client.hgetall("reserve",function(err,reply){
-    for(key in reply) {
+  client.hgetall("reserve", function (err, reply) {
+    for (key in reply) {
       var parseReply = JSON.parse(reply[key]);
-      for(var i = 0 ; i < daysArray.length ; i++) {
-        if(parseReply.date == daysArray[i]) {
+      for (var i = 0; i < daysArray.length; i++) {
+        if (parseReply.date == daysArray[i]) {
           _result.response = 'true';
           _result.resultJson[key] = parseReply;
         }
@@ -52,15 +54,15 @@ router.post('/reserveGet',function(req,res) {
 });
 
 
-router.post('/reserveGetByKey',function(req,res){
+router.post('/reserveGetByKey', function (req, res) {
   var _result = {
-    resCode : 'false',
-    resultJson : {}
+    resCode: 'false',
+    resultJson: {}
   }
 
   var key = req.body.key;
-  client.hget("reserve",key,function(err,reply){
-    if(err) {
+  client.hget("reserve", key, function (err, reply) {
+    if (err) {
       console.log(err);
       res.send();
     }
@@ -70,17 +72,16 @@ router.post('/reserveGetByKey',function(req,res){
   });
 })
 
-router.post('/reserveUpdate', function(req,res) {
+router.post('/reserveUpdate', function (req, res) {
   var inputData = req.body;
-  client.hset('reserve',key,JSON.stringify(inputData),function(err,reply){ 
-    if(err) return;
-
+  client.hset('reserve', key, JSON.stringify(inputData), function (err, reply) {
+    if (err) return;
     res.send();
   });
 })
 
 
-router.post('/reserveDelete',function(req,res) { 
+router.post('/reserveDelete', function (req, res) {
   console.log('reserveDelete');
 
   var key = req.body.key;
@@ -88,8 +89,8 @@ router.post('/reserveDelete',function(req,res) {
     resCode: 'false',
   }
 
-  client.hdel('reserve',key,function(err,reply){
-    if(err) return;
+  client.hdel('reserve', key, function (err, reply) {
+    if (err) return;
 
     result.resCode = 'success';
     res.send(result);
@@ -97,63 +98,57 @@ router.post('/reserveDelete',function(req,res) {
 
 })
 
-router.post('/reserveCheck',function(req,res) {
-  console.log('/reserveCheck');
+router.post('/reserveCheck', function (req, res) {
   var date = req.body.date;
   var time = req.body.time;
   var check;
   var result = {
-    resCode : 'fail'
+    resCode: 'fail'
   }
-
-  client.hgetall('reserve',function(err, reply){ 
-    // console.log(reply);
-    for(key in reply) {
+  client.hgetall('reserve', function (err, reply) {
+    for (key in reply) {
       var parseReply = JSON.parse(reply[key]);
-      if(parseReply.date == date) {
-        console.log('1111');
-        check = fnCheckTime(parseReply.startTime,parseReply.endTime,time)
-        console.log(check);
-        if(check){
-          client.hget('reserve',key,function(err,value){
-            result.resCode = 'success';
-            result.reply = value;
-            res.send(result);
-          })
-        } else {
-          res.send(result);
-        };
-        console.log('여기 맞는 데이터가 있습니다 . : ' + parseReply.date);
+      if (parseReply.date == date) {
+        check = fnCheckTime(parseReply.startTime, parseReply.endTime, time)
+        if (check) {
+          result.resCode = 'success';
+          result.reply = JSON.stringify(parseReply);
+        }
       }
     }
+    res.send(result);
   })
 })
 
-function fnCheckTime(startTime,endTime,curTime) {
+function fnCheckTime(startTime, endTime, curTime) {
+  var result;
   var startDate = new Date();
   var endDate = new Date();
   var curDate = new Date();
 
-  endDate.setHours(parseInt(endTime.substring(0,2)),parseInt(endTime.substring(2,4)),0);
-  startDate.setHours(startTime.substring(0,2),startTime.substring(2,4),0);
-  curDate.setHours(curTime.substring(0,2),curTime.substring(2,4),0);
-  // curDate.setHours(12,0,0);
-  
-  console.log(endDate.getHourse + ":" + endDate.getMinutes);
-  console.log(startDate.getHourse + ":" + startDate.getMinutes);
-  console.log(curDate.getHourse + ":" + curDate.getMinutes);
-
-  if(startDate <= curDate && curDate <= endDate){
-    console.log('시간사이에요있어요');
-    return true;
+  if (endDate.length == 3) {
+    endDate.setHours(parseInt(endTime.substring(0, 1)), parseInt(endTime.substring(1, 3)), 0);
   } else {
-    console.log('시간사이에없어요.');
-    return false;
+    endDate.setHours(parseInt(endTime.substring(0, 2)), parseInt(endTime.substring(2, 4)), 0);
   }
 
+  if (startTime.length == 3) {
+    startDate.setHours(startTime.substring(0, 1), startTime.substring(1, 3), 0);
+  } else {
+    startDate.setHours(startTime.substring(0, 2), startTime.substring(2, 4), 0);
+  }
+  curDate.setHours(curTime.substring(0, 2), curTime.substring(2, 4), 0);
+
+  if (startDate <= curDate && curDate <= endDate) {
+    result = true;
+  } else {
+    result = false;
+  }
+
+  return result;
 }
 
-router.get('/a',function(req,res){
+router.get('/a', function (req, res) {
   res.render('calendar');
 })
 

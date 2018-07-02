@@ -19,16 +19,10 @@ $(document).ready(function() {
 
 function init() {
 	$("#reserveUpdate").hide();
+	
 	fnTableInit();
-	// $("#wraps").removeClass("reserve");
 }
 
-function test() {
-	// $( "#btnReserve" ).trigger( "click" );
-	// $('#subject').val("Reserver System 구축");
-	// $('#employee').val("김준엽");
-	// $('#phone').val("010-2312-1111");
-}
 
 function fnTableInit() {
 	var datePrint = new Date();
@@ -85,7 +79,6 @@ function fnTableValueInit() {
 			html += '<span class="w3-opacity">'
 			html += title;
 			html += '</span>'
-			var test = '1';
 			var lastHtml = '';
 			lastHtml += '<button onclick="fnAjaxDelete('+key+')" class="w3-button w3-right w3-tinny reserveDelete" data-key="'+key+'">X</button>'
 			var only = '';
@@ -94,18 +87,17 @@ function fnTableValueInit() {
 			var findStartTime = result[key].startTime;
 			var findEndTime = result[key].endTime;
 			var timeArray = fnGetTimeBetweenArray(findStartTime,findEndTime);
-			console.log(timeArray.length);
 			for(var i = 0 ; i < timeArray.length ; i ++) {
 				if(i==0){
 					if(timeArray.length == 1) {
-						$("td[data-date="+findDate+"][data-time="+timeArray[i]+"]").attr('data-key',key).addClass(fnFontColorChange(colorIndex)).html(only);
+						$("td[data-date="+findDate+"][data-time="+timeArray[i]+"]").attr('data-key',key).addClass('w3-panel w3-pink').html(only);
 					} else {
-						$("td[data-date="+findDate+"][data-time="+timeArray[i]+"]").attr('data-key',key).addClass(fnFontColorChange(colorIndex)).html(html);
+						$("td[data-date="+findDate+"][data-time="+timeArray[i]+"]").attr('data-key',key).addClass('w3-panel w3-pink').html(html);
 					}
 				} else if(i==(timeArray.length-1)){
-					$("td[data-date="+findDate+"][data-time="+timeArray[i]+"]").attr('data-key',key).addClass(fnFontColorChange(colorIndex)).html(lastHtml);
+					$("td[data-date="+findDate+"][data-time="+timeArray[i]+"]").attr('data-key',key).addClass('w3-panel w3-pink').html(lastHtml);
 				} else {
-					$("td[data-date="+findDate+"][data-time="+timeArray[i]+"]").attr('data-key',key).addClass(fnFontColorChange(colorIndex));
+					$("td[data-date="+findDate+"][data-time="+timeArray[i]+"]").attr('data-key',key).addClass('w3-panel w3-pink').html('');
 				}
 			}
 			colorIndex++;
@@ -123,7 +115,7 @@ function fnFontColorChange(num){
 	} else if ((num%5) == 2) {
 		result = 'w3-panel w3-yellow';
 	} else if ((num%5) == 3) { 
-		reuslt = 'w3-panel w3-blue';
+		reuslt = 'w3-panel w3-light-grey';
 	} else if ((num%5) == 4){
 		result = 'w3-panel w3-light-grey';
 	} else {}
@@ -198,7 +190,7 @@ function fnAjaxGetReserve(resultReturn) {
 			if(result.response == 'true'){
 				resultReturn(result.resultJson)
 			} else {
-				console.log('fail');
+				return;
 			}
 		} 
 	})
@@ -237,6 +229,7 @@ function reservationUi () {
 		$("#reserveWrite").hide();
 		$("#month, #prev, #next").hide();
 		$("#navi").show();
+		$("#reserveUpdate").hide();
 	})
 	
 	$("#btnReserve").click(function (){
@@ -262,7 +255,11 @@ function reservationUi () {
 	})
 
 	$("#btnFormSubmmit").unbind('click').bind('click',function(){
-		fnAjaxWriteReserve();
+		if(fnSubmmitValidation()) {
+			fnAjaxWriteReserve();
+		} else {
+			return;
+		}
 	})
 
 	$("#next").unbind("click").bind("click",function(){
@@ -321,6 +318,54 @@ function reservationUi () {
 
 	
 };
+
+function fnSubmmitValidation() {
+	var result = true;
+	var title = $('#subject').val();
+	var employee = $('#employee').val();
+	var phone =  $('#phone').val();
+
+	var startTime = $('#startTime').val();
+	var endTime = $('#endTime').val();
+
+
+	if(title == ''){
+		alert('제목을 입력하세요.');
+		$('#subject').addClass('w3-border-red');
+		$('#subject').focus();
+		result = false;
+	} else if(employee == ''){
+		alert('담당자를 입력하세요.');
+		$('#subject').removeClass('w3-border-red');
+		$('#employee').addClass('w3-border-red');
+		$('#employee').focus();
+		result = false;
+	} else if(phone == ''){
+		alert('핸드폰번호를 입력하세요.');
+		$('#employee').removeClass('w3-border-red');
+		$('#phone').addClass('w3-border-red');
+		$('#phone').focus();
+		result = false;
+	} else if (startTime == '') {
+		alert('시작시간을 입력하시오.');
+		$('#phone').removeClass('w3-border-red');
+		$('#startTime').addClass('w3-border-red');
+		$('#startTime').focus();
+		result = false;
+	} else if (endTime == '') {
+		alert('시작시간을 입력하시오.');
+		$('#startTime').removeClass('w3-border-red');
+		$('#endTime').addClass('w3-border-red');
+		$('#endTime').focus();
+		result = false;
+	} 
+
+
+	// date: $('#inputdate').val(), 
+	// startTime: $('#startTime').val(),
+	// endTime: $('#endTime').val()
+	return result;
+}
 
 // reserveData
 function reserveData() {
@@ -408,15 +453,40 @@ function fnCheckReserve(checkDate,hour,minute) {
 				var time = '';
 				var startTime = parseReply.startTime;
 				var endTime = parseReply.endTime;
+				var startHour;
+				var startMinute;
+				var endHour;
+				var endMinute;
 
 				$('#curTitle').html(parseReply.title);
-				time += startTime.substring(0,2) + " : " + startTime.substring(2,4);
-				time += ' ~ ';
-				time += endTime.substring(0,2) + " : " + endTime.substring(2,4);
+				console.log(startTime.substring(0,1));
+				if(startTime.length == 3) {
+					startHour = startTime.substring(0,1);
+					startMinute = startTime.substring(1,3);
+				} else {
+					startHour = startTime.substring(0,2);
+					startMinute = startTime.substring(2,4);
+				}
+
+				if(endTime.length == 3) {
+					endHour = endTime.substring(0,1);
+					endMinute = endTime.substring(1,3);
+				} else {
+					endHour = endTime.substring(0,2);
+					endMinute = endTime.substring(2,4);
+				}
+
+				time += startHour + " : " + startMinute;
+				time += " ~ ";
+				time += endHour + " : " + endMinute;
+
 				$('#curTime').html(time);
 				$('#curEmployee').html(parseReply.employee);
 
-				console.log(time);
+			} else  {
+				$('#curTitle').html("해당 시간의 회의일정이 없습니다.");
+				$('#curTime').html('');
+				$('#curEmployee').html('');
 			}
 		}
 	})
@@ -440,7 +510,7 @@ function fnAjaxWriteReserve() {
 		data: reserveData,
 		success: function(){
 			$('#id01').css('display','none');
-			fnTableValueInit();
+			init();
 		} 
 	})
 }

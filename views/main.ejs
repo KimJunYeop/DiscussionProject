@@ -17,6 +17,7 @@
 	<!-- plugin -->
 	<link rel="stylesheet" type="text/css" href="plugin/brick_UI/brick_UI.css">
 	<link rel="stylesheet" type="text/css" href="plugin/material-iconic-font/css/material-design-iconic-font.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 
 	<script type="text/javascript" src="assets/js/ui.js"></script>
 
@@ -30,7 +31,7 @@
 					<button type="button" id="homeTitle">
 						<h2>KJY LABS</h2>
 					</button>
-				</div>	
+				</div>
 
 				<button type="button" id="prev"> &#10094; </button>
 				<div class="fb_y" id="month"></div>
@@ -48,9 +49,9 @@
 			<!-- reserveIng -->
 			<div id="reserveIng" class="fb_xy">
 				<div class="info">
-					<strong id="curTitle">여기다가 제목</strong>
-					<span id="curTime">09:10 ~ 10:10 시간</span>
-					<p id="curEmployee">이름</p>
+					<strong id="curTitle"></strong>
+					<span id="curTime"></span>
+					<p id="curEmployee"></p>
 				</div>
 			</div>
 			<!-- reserveFull -->
@@ -62,18 +63,6 @@
 				<div class="tableWrap tableBody">
 					<table id="reserveTableBody">
 						<tbody>
-							<!-- <tr>
-								<td>&nbsp;</td>
-								<td rowspan="7" class="reserve" onclick="reserveData()">
-									<div class="info">
-										<strong>회의이름</strong>
-										<span>09:10 ~ 10:10</span>
-									</div>
-								</td>
-								<td>&nbsp;</td>
-								<td>&nbsp;</td>
-								<td>&nbsp;</td>
-							</tr> -->
 						</tbody>
 					</table>
 				</div>
