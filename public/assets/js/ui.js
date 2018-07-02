@@ -407,7 +407,7 @@ function reservationUi () {
 			}else if(minute < 0){
 				minute = '50';
 				hour = parseInt(hour);
-				hour -= 1;
+				hour -= 1; 
 			}
 			minute = minute.toString();
 			hour = hour.toString();
@@ -492,9 +492,24 @@ function fnUpdateValidation() {
 	var title = $('#input_demo_01').val();
 	var employee = $('#input_demo_02').val();
 	var phone =  $('#input_demo_03').val();
-
+	// var date = $('#input_demo_04').val();
 	var startTime = $('#input_demo_05').val();
 	var endTime = $('#input_demo_06').val();
+
+	// var timeArray = fnGetTimeBetweenArray(startTime,endTime);
+	// if(timeArray.length == 0) {
+	// 	timeArray.push(startTime);
+	// }
+
+	// for(index in timeArray) {
+	// 	var find = $('td[data-date=' + date + '][data-time='+timeArray[index]+']').attr('data-key');
+	// 	// console.log($('td[data-date=' + date + '][data-time='+timeArray[index]+']'));
+	// 	if(find != '0'){ 
+	// 		alert('이미 해당 날짜, 시간에 회의가 존재합니다.');
+	// 		result = false;
+	// 		return false;
+	// 	}
+	// }
 
 	if(title == ''){
 		alert('제목을 입력하세요.');
@@ -514,8 +529,6 @@ function fnUpdateValidation() {
 		$('#input_demo_03').focus();
 		result = false;
 	} else{}
-
-	
 
 	if(startTime.length > 4) {
 		alert('시작시간 형식 재확인 바랍니다.(hhmm)');
@@ -607,6 +620,9 @@ function fnUpdateValidation() {
 		$('#input_demo_05').focus();
 		result = false;
 	}
+
+
+
 	return result;
 }
 
@@ -805,6 +821,7 @@ function fnAjaxWriteReserve() {
 		data: reserveData,
 		success: function(){
 			$('#id01').css('display','none');
+
 			init();
 		} 
 	})
