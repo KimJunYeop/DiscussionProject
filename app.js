@@ -3,6 +3,8 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var socketio = require('socket.io');
+var cors = require('cors');
 
 var indexRouter = require('./routes/ui/reserve');
 var usersRouter = require('./routes/users');
@@ -19,6 +21,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(cors());
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
@@ -39,7 +42,9 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-app.listen(8090,function(){
-});
+var server = app.listen(8090,function(){
+  console.log('server 가 시작되었습니다. 포트 : 8090');
+})
+
 
 module.exports = app;

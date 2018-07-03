@@ -3,7 +3,9 @@ var router = express.Router();
 var redis = require('redis');
 var client = redis.createClient(6379, "127.0.0.1");
 
-var reserve = require('../api/reserve.js');
+var reserve = require('../api/reserveSocket.js');
+
+
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -95,55 +97,6 @@ router.post('/reserveDelete', function (req, res) {
 
 })
 
-router.post('/reserveCheck', function (req, res) {
-  var date = req.body.date;
-  var time = req.body.time;
-  var check;
-  var result = {
-    resCode: 'fail'
-  }
-  client.hgetall('reserve', function (err, reply) {
-    for (key in reply) {
-      var parseReply = JSON.parse(reply[key]);
-      if (parseReply.date == date) {
-        check = fnCheckTime(parseReply.startTime, parseReply.endTime, time)
-        if (check) {
-          result.resCode = 'success';
-          result.reply = JSON.stringify(parseReply);
-        }
-      }
-    }
-    res.send(result);
-  })
-})
-
-function fnCheckTime(startTime, endTime, curTime) {
-  var result;
-  var startDate = new Date();
-  var endDate = new Date();
-  var curDate = new Date();
-
-  if (endDate.length == 3) {
-    endDate.setHours(parseInt(endTime.substring(0, 1)), parseInt(endTime.substring(1, 3)), 0);
-  } else {
-    endDate.setHours(parseInt(endTime.substring(0, 2)), parseInt(endTime.substring(2, 4)), 0);
-  }
-
-  if (startTime.length == 3) {
-    startDate.setHours(startTime.substring(0, 1), startTime.substring(1, 3), 0);
-  } else {
-    startDate.setHours(startTime.substring(0, 2), startTime.substring(2, 4), 0);
-  }
-  curDate.setHours(curTime.substring(0, 2), curTime.substring(2, 4), 0);
-
-  if (startDate <= curDate && curDate <= endDate) {
-    result = true;
-  } else {
-    result = false;
-  }
-
-  return result;
-}
 
 router.get('/a', function (req, res) {
   res.render('calendar');

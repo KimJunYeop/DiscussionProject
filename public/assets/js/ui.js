@@ -6,15 +6,77 @@ var _monthdays = new Array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
 var _weekNext = 0;
 var _key;
 
+var socket;
+
 $(document).ready(function() {
 	$("#month, #prev, #next").hide();
+	socketConnect();
 	init();
 	brickUi();
 	clock();
-	//test를 위한 
 	//setInterval : clock 1초마다 갱신.
 	setInterval('clock()', 1000);
 });
+
+function socketConnect() {
+	var options = {'forceNew' : true};
+	var url = 'http://127.0.0.1:8091';
+	socket = io.connect(url,options);
+
+	socket.on('connect' ,function() {
+		console.log('웹 소켓 서버에 연결되었습니다 : ' + url);
+
+		//여기서 message 받으면 처리. ^^
+		socket.on('message', function(message) {
+			var result = message;
+			console.log(result);
+			if(result.resCode == 'success') {
+				var parseReply = JSON.parse(result.reply);
+				var time = '';
+				var startTime = parseReply.startTime;
+				var endTime = parseReply.endTime;
+				var startHour;
+				var startMinute;
+				var endHour;
+				var endMinute;
+
+				$('#curTitle').html(parseReply.title);
+				if(startTime.length == 3) {
+					startHour = startTime.substring(0,1);
+					startMinute = startTime.substring(1,3);
+				} else {
+					startHour = startTime.substring(0,2);
+					startMinute = startTime.substring(2,4);
+				}
+
+				if(endTime.length == 3) {
+					endHour = endTime.substring(0,1);
+					endMinute = endTime.substring(1,3);
+				} else {
+					endHour = endTime.substring(0,2);
+					endMinute = endTime.substring(2,4);
+				}
+
+				time += startHour + " : " + startMinute;
+				time += " ~ ";
+				time += endHour + " : " + endMinute;
+
+				$('#curTime').html(time);
+				$('#curEmployee').html(parseReply.employee);
+				$('#curPhone').html(parseReply.phone);
+			} else  {
+				$('#curTitle').html("현재 회의실에 회의일정이 없습니다.");
+				$('#curTime').html('');
+				$('#curEmployee').html('회의일정을 등록해주세요.');
+				$('#curPhone').html('');
+			}
+		})
+	})
+
+	socket.on('disconnect',function(){ 
+		console.log('웹 소켓 연결이 종료되었습니다.');
+	})
+}
 
 function init() {
 	$("#reserveUpdate").hide();
@@ -24,7 +86,6 @@ function init() {
 
 
 function fnTableInit() {
-	var datePrint = new Date();
 	var tableStr = '';
 	var time = 8;
 	var minute = 0;
@@ -626,9 +687,6 @@ function fnUpdateValidation() {
 	return result;
 }
 
-function fnCheckMinute() {
-
-}
 
 function fnSubmmitValidation() {
 	var result = true;
@@ -706,7 +764,6 @@ function clock() {
 	newDate.setDate(newDate.getDate());
 	// Output the day, date, month and year
 	//$('#Date').html(dayNames[newDate.getDay()] + " " + newDate.getDate() + ' ' + monthNames[newDate.getMonth()] + ' ' + newDate.getFullYear());
-	var checkDate = (newDate.getFullYear()).toString() + fnLeadingZeros(((newDate.getMonth()+1)).toString(),2) + fnLeadingZeros((newDate.getDate()).toString(),2);
 
 	$('#date').html(newDate.getFullYear() + '년 ' + _monthNames[newDate.getMonth()] + ' ' + newDate.getDate() + '일 ' + ' (' + _dayNames[newDate.getDay()] + ') 요일');
 
@@ -714,9 +771,6 @@ function clock() {
     var hours = today.getHours();
     var minutes = today.getMinutes();
     var seconds = today.getSeconds();
-
-
-	fnCheckReserve(checkDate,fnLeadingZeros(hours,2),fnLeadingZeros(minutes,2));
 
     //Set the AM or PM time
     if (hours >= 12) {
@@ -746,63 +800,6 @@ function clock() {
 	}
 	document.getElementById("clock").innerHTML = (hours + ":" + minutes + ":" + seconds + '<span>'+ meridiem +'</span>');			
 }
- 
-function fnCheckReserve(checkDate,hour,minute) {
-	var time = hour.toString() + minute.toString();
-	var data = {
-		date : checkDate,
-		time : time
-	}
-
-	$.ajax({
-		type: "POST",
-		url: "/reserveCheck",
-		data:data,
-		success: function(result) {
-			if(result.resCode == 'success') {
-				var parseReply = JSON.parse(result.reply);
-				var time = '';
-				var startTime = parseReply.startTime;
-				var endTime = parseReply.endTime;
-				var startHour;
-				var startMinute;
-				var endHour;
-				var endMinute;
-
-				$('#curTitle').html(parseReply.title);
-				if(startTime.length == 3) {
-					startHour = startTime.substring(0,1);
-					startMinute = startTime.substring(1,3);
-				} else {
-					startHour = startTime.substring(0,2);
-					startMinute = startTime.substring(2,4);
-				}
-
-				if(endTime.length == 3) {
-					endHour = endTime.substring(0,1);
-					endMinute = endTime.substring(1,3);
-				} else {
-					endHour = endTime.substring(0,2);
-					endMinute = endTime.substring(2,4);
-				}
-
-				time += startHour + " : " + startMinute;
-				time += " ~ ";
-				time += endHour + " : " + endMinute;
-
-				$('#curTime').html(time);
-				$('#curEmployee').html(parseReply.employee);
-				$('#curPhone').html(parseReply.phone);
-			} else  {
-				$('#curTitle').html("현재 회의실에 회의일정이 없습니다.");
-				$('#curTime').html('');
-				$('#curEmployee').html('회의일정을 등록해주세요.');
-				$('#curPhone').html('');
-			}
-		}
-	})
-
-}
 
 function fnAjaxWriteReserve() {
 
@@ -820,8 +817,10 @@ function fnAjaxWriteReserve() {
 		url: "/reserveWrite",
 		data: reserveData,
 		success: function(){
+			$('#subject').val(''),
+			$('#employee').val(''),
+			$('#phone').val(''),
 			$('#id01').css('display','none');
-
 			init();
 		} 
 	})
